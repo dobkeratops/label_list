@@ -29,11 +29,12 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"person",
 		isa:[]string{"human"},
+		examples:[]string{"man","woman","child","boy","girl","baby","police officer","soldier","workman"},
 	},
 	{
 		name:"human",
 		isa:[]string{"animal"},
-		has:[]string{"head","arm","leg","body"},
+		has:[]string{"head","arm","leg","torso","neck"},
 		states:[]string{"standing","walking","running","sitting","kneeling","reclining","sleeping"},
 	},
 	{
