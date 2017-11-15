@@ -246,7 +246,6 @@ var(g_srcLabels=[]SrcLabel{
 })
 
 func main() {
-	fmt.Println("hello world\n");
 
 	// compile labels into a map for access by string, with links
 
@@ -304,26 +303,28 @@ func main() {
 
 	// Show results:-
 	// TODO formalise this as actual JSON
+	fmt.Printf("{\n ");
 	for name,label :=range labels {
-		fmt.Printf("\"%v\":{\n ",name);
+		fmt.Printf("\t\"%v\":{\n ",name);
 
-		printContent:=func(n string,xs[]*Label){
+		printContent:=func(n string,xs[]*Label,postfix string){
 			if len(xs)==0 {return}
-			fmt.Printf("\t\"%s\":[",n);
+			fmt.Printf("\t\t\"%s\":[",n);
 			for i,x:=range xs{
 				fmt.Printf("\"%v\"",x.name)
 				if i<len(xs)-1 {fmt.Printf(",");} 
 			}
 		
-			fmt.Printf("]\n");
+			fmt.Printf("]%s\n",postfix);
 		}
 		
-		printContent("isa",label.isa);
-		printContent("examples",label.examples);
-		printContent("has",label.has);
-		printContent("part_of",label.part_of);
-		fmt.Printf("},\n")
+		printContent("isa",label.isa,",");
+		printContent("examples",label.examples,",");
+		printContent("has",label.has,",");
+		printContent("part_of",label.part_of,"");
+		fmt.Printf("\t},\n")
 	}
+	fmt.Printf("}\n ");
 	
 	
 }
