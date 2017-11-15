@@ -1,5 +1,5 @@
 package main
-import ("fmt")
+import ("fmt";"os")
 
 type SrcLabel struct {
 	name string;
@@ -309,16 +309,25 @@ var(g_srcLabels=[]SrcLabel{
 // generalise leaf/root tracing 'isa'/'examples'
 
 func computeRootDistances(labels map[string]*Label) {
-	visited:=make(map[*Label]bool)
 	
 	// find each root..
 	for _,x :=range labels{
 		if len(x.isa)>0{ //is this a root?
 			continue;
 		}
-		floodFillRootDist(&visited,x, 0)
+		floodFillRootDist(x, 0)
 	}
 }
+func computeLeafDistances(labels map[string]*Label) {
+	// find each root..
+	for _,x :=range labels{
+		if len(x.examples)>0{ //is this a leaf?
+			continue;
+		}
+		floodFillLeafDist(x, 0)
+	}
+}
+
 func setMinInt(p *int,x int){
 	if x<*p {*p=x}
 }
@@ -326,18 +335,52 @@ func setMaxInt(p *int,x int){
 	if x>*p {*p=x}
 }
 
-func floodFillRootDist(visited *map[*Label]bool, label *Label, dist int){
-	if _,ok := (*visited)[label]; ok { return }	// dont visit twice
-	(*visited)[label] = true;
+func floodFillRootDist(label *Label, dist int){
+	if label.minDistFromRoot<=dist{ return }// dont visit again; shorter path found already
 	setMinInt(&label.minDistFromRoot,dist)
 	for _,x := range label.examples {
-		floodFillRootDist(visited, x,dist+1);
+		floodFillRootDist(x,dist+1);
+	}
+}
+func floodFillLeafDist(label *Label, dist int){
+	if label.minDistFromLeaf<=dist{ return }// dont visit again; shorter path found already
+	setMinInt(&label.minDistFromLeaf,dist)
+	for _,x := range label.isa {	// go back one
+		floodFillLeafDist(x,dist+1);
 	}
 }
 
 func createLabel(n string) *Label{
 	l:=&Label{name:n, minDistFromRoot:0xffff,minDistFromLeaf:0xffff}
 	return l
+}
+
+type LabelList struct{
+	all map[string]*Label;
+	orphans []*Label; // no 'isa' or 'examples'
+	roots []*Label; // no 'isa'
+	leaves []*Label; // no 'examples'
+	middle []*Label; // both 'isa' and 'examples'
+}
+func makeLabelList(src map[string]*Label) *LabelList{
+	l:=&LabelList{all:src};
+	for _,x := range src{
+		num_isa:=len(x.isa);
+		num_examples:=len(x.examples);
+		if num_isa==0 && num_examples==0 {
+			appendLabelList(&l.orphans, x);
+		} else if num_isa!=0 && num_examples!=0 {
+			appendLabelList(&l.middle, x);
+		} else if num_isa==0 {
+			appendLabelList(&l.roots, x);
+		} else if num_examples==0 {
+			appendLabelList(&l.leaves, x);
+		} else {
+			fmt.Printf("fail!\n");
+			os.Exit(0)
+		}
+	}
+	return l;
 }
 
 func main() {
@@ -395,8 +438,10 @@ func main() {
 			this_label.smaller_than = append(this_label.smaller_than, x)
 		}
 	}
-//	computeLeafDistances(labels);
+	computeLeafDistances(labels);
 	computeRootDistances(labels);
+
+	labelList := makeLabelList(labels);
 
 	// Show results:-
 	// TODO formalise this as actual JSON
@@ -424,6 +469,9 @@ func main() {
 	}
 	fmt.Printf("}\n ");
 	
+	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels\":%v \"leaf examples\":%v,\"orphans\":%v}",
+		len(labelList.all),
+		len(labelList.roots), len(labelList.middle),len(labelList.leaves), len(labelList.orphans));
 	
 }
 
