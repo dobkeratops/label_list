@@ -1,7 +1,7 @@
 package main
 import ("fmt";"os")
 
-// raw label description as read from JSON
+// raw label description to be read from JSON
 type SrcLabel struct { 
 	name string;
 	isa []string;
@@ -15,7 +15,7 @@ type SrcLabel struct {
 	
 }
 
-// fully linked working copy
+// compiled label, with complete links
 type Label struct {
 	name string;
 	isa []*Label;
@@ -29,7 +29,7 @@ type Label struct {
 	minDistFromLeaf int;
 }
 
-func appendLabelList(ls *[]*Label,l *Label){
+func appendLabelPtrList(ls *[]*Label,l *Label){
 	*ls = append(*ls, l)
 }
 
@@ -62,7 +62,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"generic objects",
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","brush","bottle","tub","bag","clothing","fabrics","sports equipment","mechanism","desktop objects","household objects","urban objects","military"},
+		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","brush","bottle","tub","bag","clothing","fabrics","sports equipment","mechanism","desktop objects","household objects","agricultural objects","urban objects","military","ornament","painting","photograph"},
 	},
 	{
 		name:"household objects",
@@ -394,8 +394,12 @@ var(g_srcLabels=[]SrcLabel{
 		isa:[]string{"building"},
 		has:[]string{"atrium","board room","office"},
 	},
+	{
+		name:"agricultural objects",
+		examples:[]string{"hay bail","farm animal","agricultural equipment"},
+	},
 	{	name:"urban objects",
-		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","traffic sign","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe","roadworks","bollard","traffic cone"},
+		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","traffic sign","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe","roadworks","bollard","traffic cone","statue","monument","bus shelter","bus stop","pedestrian crossing"},
 	},
 	{
 		name:"traffic sign",
@@ -592,7 +596,7 @@ func createLabel(n string) *Label{
 	return l
 }
 
-type LabelList struct{
+type LabelGraph struct{
 	all map[string]*Label;
 	orphans []*Label; // no 'isa' or 'examples'
 	roots []*Label; // no 'isa'
@@ -600,7 +604,7 @@ type LabelList struct{
 	middle []*Label; // both 'isa' and 'examples'
 }
 
-func makeLabelList(srcLabels []SrcLabel) *LabelList{
+func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 
 	var labels=make(map[string]*Label);
 
@@ -621,24 +625,24 @@ func makeLabelList(srcLabels []SrcLabel) *LabelList{
 		// "isa" and "examples" are reciprocated:-
 		for _,isa_name:= range src.isa{
 			isa_labelstruct:=findOrMakeLabel(isa_name)
-			appendLabelList(&isa_labelstruct.examples, this_label)
-			appendLabelList(&this_label.isa,  isa_labelstruct);
+			appendLabelPtrList(&isa_labelstruct.examples, this_label)
+			appendLabelPtrList(&this_label.isa,  isa_labelstruct);
 		}
 		for _,ex:= range src.examples{
 			exl:=findOrMakeLabel(ex)
-			appendLabelList(&exl.isa, this_label)
-			appendLabelList(&this_label.examples, exl);
+			appendLabelPtrList(&exl.isa, this_label)
+			appendLabelPtrList(&this_label.examples, exl);
 		}
 		// "has" and "partof" are reciprocated
 		for _,has:= range src.has{
 			x:=findOrMakeLabel(has)
-			appendLabelList(&x.part_of, this_label)
-			appendLabelList(&this_label.has, x);
+			appendLabelPtrList(&x.part_of, this_label)
+			appendLabelPtrList(&this_label.has, x);
 		}
 		for _,p:= range src.part_of{
 			x:=findOrMakeLabel(p)
-			appendLabelList(&x.has, this_label)
-			appendLabelList(&this_label.part_of, x);
+			appendLabelPtrList(&x.has, this_label)
+			appendLabelPtrList(&this_label.part_of, x);
 		}
 
 		// "bigger than" and "smaller than" are reciprocated
@@ -657,18 +661,18 @@ func makeLabelList(srcLabels []SrcLabel) *LabelList{
 	computeRootDistances(labels);
 
 	// final collection
-	l:=&LabelList{all:labels};
+	l:=&LabelGraph{all:labels};
 	for _,x := range l.all{
 		num_isa:=len(x.isa);
 		num_examples:=len(x.examples);
 		if num_isa==0 && num_examples==0 {
-			appendLabelList(&l.orphans, x);
+			appendLabelPtrList(&l.orphans, x);
 		} else if num_isa!=0 && num_examples!=0 {
-			appendLabelList(&l.middle, x);
+			appendLabelPtrList(&l.middle, x);
 		} else if num_isa==0 {
-			appendLabelList(&l.roots, x);
+			appendLabelPtrList(&l.roots, x);
 		} else if num_examples==0 {
-			appendLabelList(&l.leaves, x);
+			appendLabelPtrList(&l.leaves, x);
 		} else {
 			fmt.Printf("fail!\n");
 			os.Exit(0)
@@ -680,20 +684,21 @@ func makeLabelList(srcLabels []SrcLabel) *LabelList{
 	// Show results:-
 	// TODO formalise this as actual JSON
 
-func (labelList LabelList) Dump(){
-	printContent:=func(n string,xs[]*Label,postfix string){
-		if len(xs)==0 {return}
-		fmt.Printf("\t\t\"%s\":[",n);
-		for i,x:=range xs{
-			fmt.Printf("\"%v\"",x.name)
-			if i<len(xs)-1 {fmt.Printf(",");} 
-		}
-		
-		fmt.Printf("]%s\n",postfix);
+func printContent(n string,xs[]*Label,postfix string){
+	if len(xs)==0 {return}
+	fmt.Printf("\t\t\"%s\":[",n);
+	for i,x:=range xs{
+		fmt.Printf("\"%v\"",x.name)
+		if i<len(xs)-1 {fmt.Printf(",");} 
 	}
+		
+	fmt.Printf("]%s\n",postfix);
+}
+
+func (self LabelGraph) DumpJSON(){
 
 	fmt.Printf("{\n ");
-	for name,label :=range labelList.all {
+	for name,label :=range self.all {
 		fmt.Printf("\t\"%v\":{\n ",name);
 
 		fmt.Printf("\t\tminDistFromRoot:%v\n", label.minDistFromRoot);
@@ -704,25 +709,33 @@ func (labelList LabelList) Dump(){
 		printContent("part_of",label.part_of,"");
 		fmt.Printf("\t},\n")
 	}
-	fmt.Printf("},{\n ");
-	
+	fmt.Printf("}\n ");
+}
+func (self LabelGraph) DumpInfo(){
+
+	fmt.Printf("{\n ");
 	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels)\":%v \"leaf examples\":%v,\"orphans\":%v},\n",
-		len(labelList.all),
-		len(labelList.roots), len(labelList.middle),len(labelList.leaves), len(labelList.orphans));
-	printContent("leaves",labelList.leaves,",");
-	printContent("middle",labelList.middle,",");
-	printContent("roots",labelList.roots,",");
-	printContent("orphans",labelList.orphans,"");
+		len(self.all),
+		len(self.roots), len(self.middle),len(self.leaves), len(self.orphans));
+	printContent("leaves",self.leaves,",");
+	printContent("middle",self.middle,",");
+	printContent("roots",self.roots,",");
+	printContent("orphans",self.orphans,"");
 	
 	fmt.Printf("}\n ");
+}
+
+func (l LabelGraph) Get(n string) *Label{
+	return l.all[n]
 }
 
 func main() {
 
 	// compile labels into a map for access by string, with links
 
-	labelList := makeLabelList(g_srcLabels);
-	labelList.Dump();
+	labelGraph := makeLabelGraph(g_srcLabels);
+	labelGraph.DumpJSON();
+	labelGraph.DumpInfo();
 
 }
 
