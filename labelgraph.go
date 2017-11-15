@@ -252,6 +252,7 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"animal",
 		isa:[]string{"organism"},
+		examples:[]string{"land animal","marine animal","vertebrate","invertebrate"},
 	},
 	{
 		name:"construction machinery",
@@ -400,7 +401,15 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"invertebrate",
 		isa:[]string{"animal"},
-		examples:[]string{"arthropod","molusc","worm"},
+		examples:[]string{"arthropod","mollusc","worm"},
+	},
+	{
+		name:"mollusc",
+		examples:[]string{"snail","slug","octopus","squid"},
+	},
+	{
+		name:"marine animal",
+		examples:[]string{"fish","octopus","squid","jellyfish","shrimp","lobster","crab"},
 	},
 	{
 		name:"vertebrate",
@@ -539,6 +548,7 @@ type LabelList struct{
 	leaves []*Label; // no 'examples'
 	middle []*Label; // both 'isa' and 'examples'
 }
+
 func makeLabelList(srcLabels []SrcLabel) *LabelList{
 
 	var labels=make(map[string]*Label);
@@ -595,7 +605,6 @@ func makeLabelList(srcLabels []SrcLabel) *LabelList{
 	computeLeafDistances(labels);
 	computeRootDistances(labels);
 
-
 	// final collection
 	l:=&LabelList{all:labels};
 	for _,x := range l.all{
@@ -617,15 +626,10 @@ func makeLabelList(srcLabels []SrcLabel) *LabelList{
 	return l;
 }
 
-func main() {
-
-	// compile labels into a map for access by string, with links
-
-	labelList := makeLabelList(g_srcLabels);
-
 	// Show results:-
 	// TODO formalise this as actual JSON
 
+func (labelList LabelList) Dump(){
 	printContent:=func(n string,xs[]*Label,postfix string){
 		if len(xs)==0 {return}
 		fmt.Printf("\t\t\"%s\":[",n);
@@ -660,6 +664,15 @@ func main() {
 	printContent("orphans",labelList.orphans,"");
 	
 	fmt.Printf("}\n ");
+}
+
+func main() {
+
+	// compile labels into a map for access by string, with links
+
+	labelList := makeLabelList(g_srcLabels);
+	labelList.Dump();
+
 }
 
 
