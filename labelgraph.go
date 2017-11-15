@@ -41,17 +41,17 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"human",
-		isa:[]string{"mamal"},
+		isa:[]string{"mammal"},
 		has:[]string{"head","arm","leg","torso","neck"},
 		states:[]string{"standing","walking","running","sitting","kneeling","reclining","sleeping"},
 	},
 	{
 		name:"soldier",
-		isa:[]string{"person","military objects"},
+		isa:[]string{"person","military"},
 	},
 	{
 		name:"weapon",
-		isa:[]string{"military objects"},
+		isa:[]string{"military"},
 		examples:[]string{"firearm","combat knife","sword","rocket launcher","flame thrower","grenade launcher",},
 	},
 	{
@@ -62,7 +62,11 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"generic objects",
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","brush","bottle","tub","bag","clothing","fabrics","sports equipment"},
+		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","brush","bottle","tub","bag","clothing","fabrics","sports equipment","mechanism","desktop objects","household objects","urban objects","military"},
+	},
+	{
+		name:"household objects",
+		examples:[]string{"furniture","kitchen appliance","kitchenware"},
 	},
 	{
 		name:"sports equipment",
@@ -82,7 +86,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"components",
-		examples:[]string{"room","buildings parts","electronic components","vehicle components","bicycle components","car parts","aircraft components","weapon components","bodypart","lever","wings","wheel","trunk","handgrip"},
+		examples:[]string{"room","building parts","electronic components","vehicle components","bicycle components","car parts","aircraft components","weapon components","bodypart","lever","wings","wheel","trunk","handgrip","domestic fittings","corridor","hallway"},
 	},
 	{
 		name:"room",
@@ -107,7 +111,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"land vehicle components",
-		examples:[]string{"bonnet","windscreen","wheel","license plate","headlight","tail light","steering wheel","joystick","caterpillar tracks","hydraulic ram","exhaust pipe"},
+		examples:[]string{"bonnet","windscreen","wheel","license plate","headlight","tail light","steering wheel","joystick","caterpillar tracks","hydraulic ram","exhaust pipe","wing mirror","license plate","indicator"},
 	},
 	{
 		name:"weapon components",
@@ -130,7 +134,7 @@ var(g_srcLabels=[]SrcLabel{
 		examples:[]string{"3d printer","CNC machine","lathe","press","injection moulding machine"},
 	},
 	{
-		name:"tools",
+		name:"tool",
 		examples:[]string{"hammer","spanner","screwdriver","chisel","saw","mallet","crowbar","hacksaw","wood saw","shovel"},
 	},
 	{
@@ -191,7 +195,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"tank",
-		isa:[]string{"vehicle","military object"},
+		isa:[]string{"vehicle","military"},
 		has:[]string{"turret","gun","caterpillar tracks"},
 	},
 	{
@@ -201,10 +205,17 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"vehicle",
 		isa:[]string{"machine"},
-		examples:[]string{"car","truck","aircraft","ship","bicycle","motorbike","bus","semi truck"},
+		examples:[]string{"aircraft","ship","boat","bicycle","motorbike","semi trailer","caravan","trailer"},
+	},
+	{
+		name:"wheeled powered vehicle",
+		isa:[]string{"vehicle"},
+		has:[]string{"wheel (car)","windscreen","license plate","headlight","wing mirror","tail light","indicator","bonnet"},
+		examples:[]string{"car","truck","van","bus","semi truck"},
 	},
 	{
 		name:"bicycle",
+		has:[]string{"bicycle components"},
 		examples:[]string{"mountain bike","city bike","touring bike","BMX","road bike","triathalon bike"},
 	},
 	{
@@ -247,7 +258,7 @@ var(g_srcLabels=[]SrcLabel{
 		name:"car",
 		isa:[]string{"vehicle"},
 		has:[]string{"wheel","bonnet","license plate","windscreen","headlight","tail light","exhaust pipe"},
-		examples:[]string{"hatchback","SUV","pickup truck","sedan","coupe","sportscar","convertible"},
+		examples:[]string{"hatchback","SUV","minivan","pickup truck","sedan","coupe","sportscar","convertible"},
 	},	
 	{
 		name:"animal",
@@ -376,7 +387,7 @@ var(g_srcLabels=[]SrcLabel{
 		has:[]string{"wheel (tractor)","cabin","engine"},
 	},
 	{	name:"domestic room",
-		examples:[]string{"kitchen","dining room","bedroom","living room","study","hallway","store room","garage"},
+		examples:[]string{"kitchen","dining room","bedroom","living room","study","store room","garage"},
 		part_of:[]string{"house"},
 	},
 	{	name:"office building",
@@ -384,14 +395,34 @@ var(g_srcLabels=[]SrcLabel{
 		has:[]string{"atrium","board room","office"},
 	},
 	{	name:"urban objects",
-		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe",},
+		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","traffic sign","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe","roadworks","bollard","traffic cone"},
+	},
+	{
+		name:"traffic sign",
+		examples:[]string{"stop sign","no entry sign","no parking sign","speed limit","roadworks sign"},
 	},
 	{
 		name:"bin",
 		examples:[]string{"street bin","wheeliebin","wastepaper basket"},
 	},
+	{
+		name:"infrastructure",
+		examples:[]string{"road","bridge","dam","resevoir"},
+	},
+	{
+		name:"renewable energy system",
+		examples:[]string{"wind turbine","solar panel","solar concentrator","hydroelectric dam","geothermal power station","wave power device"},
+	},
 	{	name:"building",
-		examples:[]string{"church","house","tower block","factory","warehouse","cathederal","terminal building","train station","skyscraper","tower",},
+		examples:[]string{"church","house","tower block","factory","warehouse","cathederal","terminal building","train station","skyscraper","tower","tall building","stadium"},
+	},
+	{
+		name:"urban area",
+		examples:[]string{"building site","financial district","town centre","park","suburb","residential area","shopping centre"},
+	},
+	{
+		name:"complex",
+		examples:[]string{"power station","military base","industrial site","airport","harbour","docks","shipyard"},
 	},
 	{
 		name:"arthropod",
@@ -414,13 +445,29 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"vertebrate",
 		isa:[]string{"animal"},
-		examples:[]string{"mamal","fish","reptile","amphibian"},
+		examples:[]string{"mammal","fish","reptile","amphibian"},
+	},
+	{
+		name:"lizard",
+		isa:[]string{"vertebrate"},
+		examples:[]string{"snake","quadrupedal lizard","quadrupedal amphibian"},
+	},
+	{
+		name:"quadrupedal lizard",
+		isa:[]string{"lizard"},
+		examples:[]string{"gecko","iguana","crocodile","alligator","dinosaur","chameleon","komodo dragon"},
+	},
+	{
+		name:"quadrupedal amphibian",
+		isa:[]string{"amphibian"},
+		examples:[]string{"frog","salamander","toad"},
 	},
 	{
 		name:"tree",
 		isa:[]string{"plant"},
+		examples:[]string{"palm tree","fern","oak tree","conifer","evergreen","small tree","large tree"},
 		has:[]string{"trunk (tree)","foilage"},
-	},	
+	},
 	{
 		name:"bush",
 		isa:[]string{"plant"},
@@ -447,6 +494,10 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"domestic fittings",
 		examples:[]string{"electric socket","light switch","air vent","airconditioning unit","tap","toilet"},
+	},
+	{
+		name:"desktop objects",
+		examples:[]string{"intray","pen holder","stapler","drawing pins","paper clips","pen","desklamp","desktop PC"},
 	},
 	{
 		name:"electrical applicance",
