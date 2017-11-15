@@ -362,30 +362,7 @@ type LabelList struct{
 	leaves []*Label; // no 'examples'
 	middle []*Label; // both 'isa' and 'examples'
 }
-func makeLabelList(src map[string]*Label) *LabelList{
-	l:=&LabelList{all:src};
-	for _,x := range src{
-		num_isa:=len(x.isa);
-		num_examples:=len(x.examples);
-		if num_isa==0 && num_examples==0 {
-			appendLabelList(&l.orphans, x);
-		} else if num_isa!=0 && num_examples!=0 {
-			appendLabelList(&l.middle, x);
-		} else if num_isa==0 {
-			appendLabelList(&l.roots, x);
-		} else if num_examples==0 {
-			appendLabelList(&l.leaves, x);
-		} else {
-			fmt.Printf("fail!\n");
-			os.Exit(0)
-		}
-	}
-	return l;
-}
-
-func main() {
-
-	// compile labels into a map for access by string, with links
+func makeLabelList(srcLabels []SrcLabel) *LabelList{
 
 	var labels=make(map[string]*Label);
 
@@ -398,7 +375,7 @@ func main() {
 			return l
 		}
 	}
-	for _,src:= range g_srcLabels {
+	for _,src:= range srcLabels {
 		this_label:=findOrMakeLabel(src.name)
 		// TODO does go have field pointers or
 		// any other means to reduce the cut-paste here..
@@ -441,7 +418,33 @@ func main() {
 	computeLeafDistances(labels);
 	computeRootDistances(labels);
 
-	labelList := makeLabelList(labels);
+
+	// final collection
+	l:=&LabelList{all:src};
+	for _,x := range src{
+		num_isa:=len(x.isa);
+		num_examples:=len(x.examples);
+		if num_isa==0 && num_examples==0 {
+			appendLabelList(&l.orphans, x);
+		} else if num_isa!=0 && num_examples!=0 {
+			appendLabelList(&l.middle, x);
+		} else if num_isa==0 {
+			appendLabelList(&l.roots, x);
+		} else if num_examples==0 {
+			appendLabelList(&l.leaves, x);
+		} else {
+			fmt.Printf("fail!\n");
+			os.Exit(0)
+		}
+	}
+	return l;
+}
+
+func main() {
+
+	// compile labels into a map for access by string, with links
+
+	labelList := makeLabelList(srcLabels);
 
 	// Show results:-
 	// TODO formalise this as actual JSON
@@ -469,7 +472,7 @@ func main() {
 	}
 	fmt.Printf("}\n ");
 	
-	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels\":%v \"leaf examples\":%v,\"orphans\":%v}",
+	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels)\":%v \"leaf examples\":%v,\"orphans\":%v}",
 		len(labelList.all),
 		len(labelList.roots), len(labelList.middle),len(labelList.leaves), len(labelList.orphans));
 	
