@@ -110,11 +110,25 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"sports equipment",
-		examples:[]string{"skis","ski pole","skateboard","football","tennis ball","shuttlecock","tennis raquet","badminton racket","hocket stick","cricket bat","baseball bat","snooker cue",},
+		examples:[]string{"skis","ski pole","skateboard","football","tennis ball","shuttlecock","tennis raquet","badminton racket","hocket stick","cricket bat","baseball bat","snooker cue","roller scate"},
+	},
+	{
+		name:"personal transport",
+		isa:[]string{"generic object"},
+		examples:[]string{"scooter","self balancing scooter","bicycle","skateboard"},
 	},
 	{
 		name:"clothing",
-		examples:[]string{"jacket","trousers","skirt","jumper","dress","tracksuit","shoes","flip flops","sandals","swimwear","hat"},
+		examples:[]string{"jacket","trousers","skirt","jumper","dress","tracksuit","swimwear","hat","coat","winter coat","waterproof clothing","sportswear","footwear"},
+	},
+	{
+		name:"footwear",
+		examples:[]string{"shoes","flip flops","sandals","cycling shoes","clogs","slippers","trainers (footwear)"},
+	},
+	{
+		name:"excercise equipment",
+		isa:[]string{"generic object"},
+		examples:[]string{"dumbell","barbell","kettlebell","excercise bike","treadmill","rowing machine","weighted vest","parallel bars","pullup bar"},
 	},
 	{
 		name:"police box",
@@ -190,7 +204,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"land vehicle component",
-		examples:[]string{"bonnet","windscreen","wheel","license plate","headlight","tail light","steering wheel","joystick","caterpillar tracks","hydraulic ram","exhaust pipe","wing mirror","license plate","indicator","differential gear","suspension"},
+		examples:[]string{"bonnet","windscreen","wheel","license plate","headlight","tail light","steering wheel","joystick","caterpillar tracks","hydraulic ram","exhaust pipe","wing mirror","license plate","indicator","differential gear","suspension","brake disk","tire","wheel hub"},
 	},
 	{
 		name:"weapon component",
@@ -202,7 +216,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"bicycle component",
-		examples:[]string{"derailleur","bicycle frame","handlebars (bicycle)","bicycle wheel","brake lever","gear lever","integrated shifters","saddle","mudguard","chain","chainset","casette (bicycle)","pedals"},
+		examples:[]string{"derailleur","bicycle frame","handlebars (bicycle)","bicycle wheel","brake lever","gear lever","integrated shifter","saddle","mudguard","chain","chainset","casette (bicycle)","pedal","clipless pedal","disc brake (bicycle)"},
 	},
 	{
 		name:"handlebars (bicycle)",
@@ -834,10 +848,12 @@ func InsertUniqueLabelPtr(list *[]*Label, item *Label) int{
 }
 
 func (self *Label) AddExample(other *Label){
+	if (self==other) {return;}	// something wrong!
 	InsertUniqueLabelPtr(&self.examples,other);
 	InsertUniqueLabelPtr(&other.isa,self);
 }
 func (self *Label) AddPart(other *Label){
+	if (self==other) {return;}	// something wrong!
 	InsertUniqueLabelPtr(&self.has,other);
 	InsertUniqueLabelPtr(&other.part_of,self);
 }
@@ -905,14 +921,12 @@ func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 
 	// final collection
 	l:=&LabelGraph{all:labels};
-	uncat:=l.CreateOrFindLabel("uncategorized item");uncat=uncat;
 	for _,x := range l.all{
 		num_isa:=len(x.isa);
 		num_examples:=len(x.examples);
 		if num_isa==0 && num_examples==0 {
 			appendLabelPtrList(&l.orphans, x);
-//			uncat.examples = append(uncat.examples,x);
-			uncat.AddExample(x);
+			l.CreateOrFindLabel("uncategorized item").AddExample(x);
 		} else if num_isa!=0 && num_examples!=0 {
 			appendLabelPtrList(&l.middle, x);
 		} else if num_isa==0 {
