@@ -65,11 +65,23 @@ var(g_srcLabels=[]SrcLabel{
 		},
 	},
 	{
-		name:"generic objects",
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","fabrics","sports equipment","mechanism","desktop objects","household objects","agricultural objects","urban objects","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter"},
+		name:"electrical",
+		examples:[]string{"battery"},
 	},
 	{
-		name:"generic objects",
+		name:"battery",
+		examples:[]string{"AA batter","AAA battery","button cell"},
+	},
+	{
+		name:"button cell",
+		examples:[]string{"LR44","CR2032","SR516","LR1154"},
+	},
+	{
+		name:"generic object",
+		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","fabrics","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical"},
+	},
+	{
+		name:"generic object",
 		examples:[]string{"tent"},
 	},
 	{
@@ -93,8 +105,8 @@ var(g_srcLabels=[]SrcLabel{
 		examples:[]string{"broom","bike cleaning brush","toothbrush","hairbrush"},
 	},
 	{
-		name:"household objects",
-		examples:[]string{"furniture","kitchen appliance","kitchenware"},
+		name:"household object",
+		examples:[]string{"furniture","kitchen appliance","kitchenware","ash tray","mirror"},
 	},
 	{
 		name:"sports equipment",
@@ -103,6 +115,14 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"clothing",
 		examples:[]string{"jacket","trousers","skirt","jumper","dress","tracksuit","shoes","flip flops","sandals","swimwear","hat"},
+	},
+	{
+		name:"police box",
+		isa:[]string{"urban object"},
+	},
+	{
+		name:"telephone box",
+		isa:[]string{"urban object"},
 	},
 	{
 		name:"hat",
@@ -552,10 +572,10 @@ var(g_srcLabels=[]SrcLabel{
 		has:[]string{"atrium","board room","office"},
 	},
 	{
-		name:"agricultural objects",
+		name:"agricultural object",
 		examples:[]string{"hay bail","farm animal","agricultural equipment"},
 	},
-	{	name:"urban objects",
+	{	name:"urban object",
 		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","traffic sign","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe","roadworks","bollard","traffic cone","statue","monument","bus shelter","bus stop","pedestrian crossing","fountain","water feature"},
 	},
 	{
@@ -682,7 +702,7 @@ var(g_srcLabels=[]SrcLabel{
 		examples:[]string{"electric socket","light switch","air vent","airconditioning unit","tap","toilet"},
 	},
 	{
-		name:"desktop objects",
+		name:"desktop object",
 		examples:[]string{"intray","pen holder","stapler","drawing pins","paper clips","pen","desklamp","desktop PC"},
 	},
 	{
@@ -692,7 +712,7 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"consumer electronics",
 		isa:[]string{"electrical applicance"},
-		examples:[]string{"TV","monitor","PC","laptop","tablet computer","smartphone","telephone","radio","game console","sound system","speakers","network switch","network hub","camera","cam corder"},
+		examples:[]string{"TV","monitor","PC","laptop","tablet computer","smartphone","telephone","radio","game console","sound system","speakers","network switch","network hub","camera","cam corder","remote control handset","electric torch"},
 	},
 	{
 		name:"mounted object",
@@ -800,6 +820,28 @@ type LabelGraph struct{
 	middle []*Label; // both 'isa' and 'examples'
 }
 
+func (self LabelGraph) CreateOrFindLabel(newname string) *Label{
+	if lbl,ok:=self.all[newname];ok {return lbl;}
+	newlbl:=&Label{name:newname}
+	self.all[newname]=newlbl;
+	return newlbl;
+}
+
+func InsertUniqueLabelPtr(list *[]*Label, item *Label) int{
+	for i,x :=range *list{if x==item {return i;}}
+	*list = append(*list, item);
+	return len(*list)-1;
+}
+
+func (self *Label) AddExample(other *Label){
+	InsertUniqueLabelPtr(&self.examples,other);
+	InsertUniqueLabelPtr(&other.isa,self);
+}
+func (self *Label) AddPart(other *Label){
+	InsertUniqueLabelPtr(&self.has,other);
+	InsertUniqueLabelPtr(&other.part_of,self);
+}
+
 func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 
 	var labels=make(map[string]*Label);
@@ -856,13 +898,21 @@ func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 	computeLeafDistances(labels);
 	computeRootDistances(labels);
 
+	// 'orphans'
+	// collect them under 'uncategorized objects'
+
+	
+
 	// final collection
 	l:=&LabelGraph{all:labels};
+	uncat:=l.CreateOrFindLabel("uncategorized item");uncat=uncat;
 	for _,x := range l.all{
 		num_isa:=len(x.isa);
 		num_examples:=len(x.examples);
 		if num_isa==0 && num_examples==0 {
 			appendLabelPtrList(&l.orphans, x);
+//			uncat.examples = append(uncat.examples,x);
+			uncat.AddExample(x);
 		} else if num_isa!=0 && num_examples!=0 {
 			appendLabelPtrList(&l.middle, x);
 		} else if num_isa==0 {
@@ -874,6 +924,7 @@ func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 			os.Exit(0)
 		}
 	}
+	
 	return l;
 }
 
@@ -891,14 +942,16 @@ func printContent(n string,xs[]*Label,postfix string){
 	fmt.Printf("]%s\n",postfix);
 }
 
-func (self LabelGraph) DumpJSON(){
+func (self LabelGraph) DumpJSON(verbose bool){
 
 	fmt.Printf("{\n ");
 	for name,label :=range self.all {
 		fmt.Printf("\t\"%v\":{\n ",name);
 
-		fmt.Printf("\t\tminDistFromRoot:%v\n", label.minDistFromRoot);
-		fmt.Printf("\t\tminDistFromLeaf:%v\n", label.minDistFromLeaf);
+		if (verbose){
+			fmt.Printf("\t\tminDistFromRoot:%v\n", label.minDistFromRoot);
+			fmt.Printf("\t\tminDistFromLeaf:%v\n", label.minDistFromLeaf);
+		}
 		printContent("isa",label.isa,",");
 		printContent("examples",label.examples,",");
 		printContent("has",label.has,",");
@@ -930,8 +983,9 @@ func main() {
 	// compile labels into a map for access by string, with links
 
 	labelGraph := makeLabelGraph(g_srcLabels);
-	labelGraph.DumpJSON();
-	labelGraph.DumpInfo();
+	labelGraph.DumpJSON(false);
+	
+	//labelGraph.DumpInfo();
 
 }
 
