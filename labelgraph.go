@@ -78,7 +78,15 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"generic object",
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","fabrics","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical"},
+		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical"},
+	},
+	{
+		name:"textile",
+		examples:[]string{"wool","silk","synthetic fabric","nylon","spandex","polyester fibre"},
+	},
+	{
+		name:"chickenwire",
+		isa:[]string{"generic object"},
 	},
 	{
 		name:"generic object",
@@ -95,6 +103,10 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"barrier",
 		examples:[]string{"fence","railing","wall","low wall","level crossing barrier"},
+	},
+	{
+		name:"fence",
+		examples:[]string{"wire fence","wooden fence","picket fence","concrete fence","barbed wire fence","palisade","stockade fence","hurdle fence","wattle fence","hedgerow","live fencing","cactus fence","dry stone wall","welded wire mesh fence","brushwood fence","chain-link fencing","woven fence","temporary fencing"},
 	},
 	{
 		name:"cleaning tool",
@@ -551,8 +563,8 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"enclosure",
-		isa:[]string{"metalabel"},
-		examples:[]string{"cubicle","cell","housing","casing","fence"},
+		isa:[]string{"generic object"},
+		examples:[]string{"cubicle","housing (mechanical)","casing","fence","electrical enclosure"},
 	},
 	{
 		name:"toxic substance",
@@ -642,7 +654,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"complex",
-		examples:[]string{"power station","military base","industrial site","airport","harbour","docks","shipyard"},
+		examples:[]string{"power station","military base","industrial site","airport","harbour","docks","shipyard","university campus","housing estate"},
 	},
 	{
 		name:"arthropod",
@@ -756,7 +768,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"surface material",
-		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiles","paving stones","bricks","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage"},
+		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiles","paving stones","bricks","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug"},
 	},
 	{
 		name:"grass",
