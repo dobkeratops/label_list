@@ -93,7 +93,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"LR44","CR2032","SR516","LR1154"},
 	},
 	"generic object":{
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical","water related object","tube","control","pedal","key","masking tape","desktop object","trash","tent","workshop object","stock"},
+		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","camping equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical","water related object","tube","control","pedal","key","masking tape","desktop object","trash","tent","workshop object","stock"},
 	},
 	"control device":{
 		isa:[]string{"generic object"},
@@ -199,6 +199,8 @@ var(g_srcLabels=map[string]SrcLabel{
 	"bag":{
 		examples:[]string{"rucksack","sports bag","handbag","courier bag"},
 	},
+	"fishing rod":{isa:[]string{"tool"}},
+	"camping equipment":{examples:[]string{"tent","mess tin","sleeping bag","tent pole","survival knife"}},
 	"component":{
 		examples:[]string{"room","building part","electronic component","vehicle component","bicycle component","mechanical component","car parts","aircraft component","weapon component","bodypart","lever","wings","wheel","trunk","handgrip","domestic fitting","corridor","hallway","metal component","handle","coin slot","keyhole","blade"},
 	},
