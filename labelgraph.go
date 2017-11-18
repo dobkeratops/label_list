@@ -57,6 +57,8 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"man","woman","child","boy","girl","baby","police officer","soldier","workman","pedestrian","guard"},
 		
 	},
+	// TODO: move these to 'metalabels'? each one is 'abstract', not just the word 'category'
+	// Motivation to keep in the graph structure: we could mimick wikipedia's category structure.
 	"category":{
 		abstract:true,
 		examples:[]string{"military","urban","industrial","domestic","natural","man made","scientific","medical","law enforcement","professional","trade","aquatic","airborn","academic","educational","transport","mechanical","organic","professional"},
@@ -71,6 +73,12 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"soldier":{
 		isa:[]string{"person","military","professional"},
+	},
+	// not comprehensive, but enough to tag things with general origin e.g.
+	// 'european vs american vs asian cities'
+	"nationality":{
+		abstract:true,
+		examples:[]string{"north american","south american","european","russian","chinese","indian","arabian","middle eastern","african","australian","canadian","east european","balkan","japanese","asian","oriental"},
 	},
 	"weapon":{
 		isa:[]string{"military","tool"},
@@ -157,7 +165,13 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"personal item":{
 		isa:[]string{"generic object"},
-		examples:[]string{"clothing","eyewear","footwear","wristwatch","jewelry","bag","suitcase","smartphone","mobile phone"},
+		examples:[]string{"clothing","eyewear","footwear","wristwatch","jewelry","bag","suitcase","smartphone","mobile phone","headwear"},
+	},
+	"headwear":{
+		examples:[]string{"hat","helmet","cap","headscarf"},
+	},
+	"helmet":{
+		examples:[]string{"bicycle helmet","motorcycle helmet","space helmet","diving helmet","crash helmet","medieval helmet","hard hat","rock climbing helmet","american football helmet","sports helmet","firefighters helmet","police helmet"},
 	},
 	"clothing":{
 		isa:[]string{"personal item"},
@@ -191,7 +205,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"human","gorilla","chimpanzee","monkey"},
 	},
 	"felinae":{
-		examples:[]string{"cat","lion","tiger","cheetah","panther"},
+		examples:[]string{"domestic cat","wild cat","lion","tiger","white tiger","cheetah","panther","lynx"},
 	},
 	"hat":{
 		examples:[]string{"party hat","peaked cap","baseball cap","beanie","flat cap","mortar board","hard hat"},
@@ -646,7 +660,8 @@ var(g_srcLabels=map[string]SrcLabel{
 
 	},
 	"area":{
-		examples:[]string{"urban area","industrial area","rural area","wilderness","desert","coastal area"},
+		abstract:true,
+		examples:[]string{"urban area","industrial area","rural area","wilderness","desert","coastal area","residential area"},
 	},
 	"marque":{
 		abstract:true,
@@ -852,7 +867,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"surface material":{
 		abstract:true,
-		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiles","paving stones","bricks","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug","porcelain","pottery","perspex","chipboard","paint","ceramic","stone","rock","building material","crystal","dolomite","smooth","rough","shiny","metalic","wet","carbon fibre"},
+		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiled","paving stones","brick","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug","porcelain","pottery","perspex","chipboard","paint","ceramic","stone","rock","building material","crystal","dolomite","smooth","rough","shiny","metalic","wet","carbon fibre","photovoltaic cell"},
+	},
+	"tile":{
+		examples:[]string{"roof tile","bathroom tile","floor tile","decorative tile",},
 	},
 	"stone":{
 		examples:[]string{"granite","limestone","sandstone","marble","ingeous rock","sedimentary rock","metamorphic rock","pumice","volcanic rock","stratified rock",},
