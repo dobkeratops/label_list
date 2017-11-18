@@ -630,7 +630,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"table","chair","bed","cupboard","desk","park bench","public bench","bench","workbench","dinner table","round table","shelf","ottoman (furniture)","stool"},
 	},
 	"chair":{
-		examples:[]string{"armchair","office chair","sofa","stackable chair","leather chair","wooden chair","plastic chair","metal chair","dining chair"},
+		examples:[]string{"armchair","office chair","sofa","stackable chair","leather chair","wooden chair","plastic chair","metal chair","dining chair","bench"},
 	},
 	"office chair":{
 		has:[]string{"castor wheel"},
@@ -1015,7 +1015,7 @@ type LabelGraph struct{
 	middle LabelPtrSet; // both 'isa' and 'examples'
 }
 
-func (self LabelGraph) CreateOrFindLabel(newname string) *Label{
+func (self *LabelGraph) CreateOrFindLabel(newname string) *Label{
 	if lbl,ok:=self.all[newname];ok {return lbl;}
 	newlbl:=createLabel(newname);
 	self.all[newname]=newlbl;
