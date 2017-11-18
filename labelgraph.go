@@ -810,7 +810,13 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"house spider","black widow (spider)","tarantula","mite","scorpion"},
 	},
 	"insect":{
-		examples:[]string{"bee","wasp","ant","beetle","fly (insect)","ladybird","praying mantis","cockroach","antlion","butterfly","moth","catepillar","aphid","hoverfly"},
+		examples:[]string{"flying insect","ant","beetle","ladybird","praying mantis","cockroach","antlion","insect larvae","aphid",},
+	},
+	"insect larvae":{
+		examples:[]string{"catepillar","maggot"},
+	},
+	"flying insect":{
+		examples:[]string{"bee","wasp","flying ant","fly (insect)","butterfly","moth","hoverfly","fruit fly"},
 	},
 	"invertebrate":{
 		isa:[]string{"animal"},
