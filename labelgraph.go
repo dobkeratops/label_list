@@ -38,10 +38,10 @@ type Label struct {
 	minDistFromLeaf int;
 }
 
-func (self *LabelPtrSet) insert(ptr *Label){
+func (self *LabelPtrSet) Insert(ptr *Label){
 	self.items[ptr]=Void{}
 }
-func (self *LabelPtrSet) init(){
+func (self *LabelPtrSet) Init(){
 	self.items=make(map[*Label]Void)
 }
 func (self *LabelPtrSet) len() int{return len(self.items)}
@@ -93,7 +93,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"LR44","CR2032","SR516","LR1154"},
 	},
 	"generic object":{
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical","water related object","tube","control","pedal","key","masking tape","desktop object","trash","tent","workshop object"},
+		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical","water related object","tube","control","pedal","key","masking tape","desktop object","trash","tent","workshop object","stock"},
 	},
 	"control device":{
 		isa:[]string{"generic object"},
@@ -200,7 +200,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"rucksack","sports bag","handbag","courier bag"},
 	},
 	"component":{
-		examples:[]string{"room","building part","electronic component","vehicle component","bicycle component","mechanical component","car parts","aircraft component","weapon component","bodypart","lever","wings","wheel","trunk","handgrip","domestic fitting","corridor","hallway","metal component","handle","coin slot","keyhole"},
+		examples:[]string{"room","building part","electronic component","vehicle component","bicycle component","mechanical component","car parts","aircraft component","weapon component","bodypart","lever","wings","wheel","trunk","handgrip","domestic fitting","corridor","hallway","metal component","handle","coin slot","keyhole","blade"},
 	},
 	"electronic component":{
 		examples:[]string{"resistor","capacitor","LED","diode","breadboard","printed circuit board"},
@@ -508,7 +508,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"dog","cat","horse","cow","sheep","lion","tiger","elephant"},
 	},
 	"door":{
-		examples:[]string{"revolving door","double door","wooden door","glass door","metal door"},
+		examples:[]string{"revolving door","double door","wooden door","glass door","metal door","hatch"},
 	},
 	"farm animal":{
 		isa:[]string{"domesticated animal"},
@@ -516,7 +516,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		found_on:[]string{"farm"},
 	},
 	"bodypart":{
-		examples:[]string{"ear","eye","eyebrow","cheek","neck","nose","mouth","chin","elbow","foot","hand","snout","tail","leg","arm","torso","body","shoulder","hips","knee","ankle"},
+		examples:[]string{"ear","eye","eyebrow","cheek","neck","nose","mouth","chin","elbow","foot","hand","snout","tail","leg","arm","torso","body","shoulder","hips","knee","ankle","hoof","paw"},
 	},
 	"head":{
 		isa:[]string{"bodypart"},
@@ -678,7 +678,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"musical instrument","medical instrument","electrical instrument"},
 	},
 	"electrical instrument":{
-		examples:[]string{"oscilloscope"},
+		examples:[]string{"oscilloscope","voltmeter"},
 	},
 	"musical instrument":{
 		examples:[]string{"piano","grand piano","string instrument","wind instrument","electronic musical instrument","keyboard (musical instrument)","sound synthesiser"},
@@ -719,14 +719,14 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"wind turbine","solar panel","solar concentrator","hydroelectric dam","geothermal power station","wave power device"},
 	},
 	"building":{
-		examples:[]string{"church","house","tower block","factory","warehouse","cathederal","terminal building","train station","skyscraper","tower","tall building","stadium","log cabin","castle","fortress","lighthouse"},
+		examples:[]string{"church","house","tower block","factory","warehouse","cathederal","terminal building","train station","skyscraper","tower","tall building","stadium","log cabin","castle","fortress","lighthouse","wooden barn","barn","grainstore"},
 	},
 	"power tool":{
 		isa:[]string{"tool"},
 		examples:[]string{"chainsaw","powerdrill"},
 	},
 	"building complex":{
-		examples:[]string{"power station","military base","industrial site","airport","harbour","docks","shipyard","university campus","housing estate"},
+		examples:[]string{"power station","military base","industrial site","airport","harbour","dockyard","shipyard","university campus","housing estate"},
 	},
 	"arthropod":{
 		isa:[]string{"animal"},
@@ -860,13 +860,13 @@ func createLabel(n string) *Label{
 	l:=&Label{name:n, minDistFromRoot:0xffff,minDistFromLeaf:0xffff}
 	// todo - can Go avoid this? - c++ constructors
 	l.initialized=true;
-	l.isa.init();
-	l.examples.init();
-	l.has.init();
-	l.part_of.init();
-	l.has.init();
-	l.bigger_than.init();
-	l.smaller_than.init();
+	l.isa.Init();
+	l.examples.Init();
+	l.has.Init();
+	l.part_of.Init();
+	l.has.Init();
+	l.bigger_than.Init();
+	l.smaller_than.Init();
 	l.abstract=false;
 	
 	return l
@@ -889,13 +889,13 @@ func (self LabelGraph) CreateOrFindLabel(newname string) *Label{
 
 func (self *Label) AddExample(other *Label){
 	if (self==other) {return;}	// something wrong!
-	self.examples.insert(other);
-	other.isa.insert(self);
+	self.examples.Insert(other);
+	other.isa.Insert(self);
 }
 func (self *Label) AddPart(other *Label){
 	if (self==other) {return;}	// something wrong!
-	self.has.insert(other);
-	other.part_of.insert(self);
+	self.has.Insert(other);
+	other.part_of.Insert(self);
 }
 
 func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
@@ -934,13 +934,13 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 		// "bigger than" and "smaller than" are reciprocated
 		for _,it:= range src.smaller_than{
 			x:=findOrMakeLabel(it)
-			x.smaller_than.insert(this_label);
-			this_label.bigger_than.insert(x);
+			x.smaller_than.Insert(this_label);
+			this_label.bigger_than.Insert(x);
 		}
 		for _,it:= range src.bigger_than{
 			x:=findOrMakeLabel(it)
-			x.bigger_than.insert(this_label);
-			this_label.smaller_than.insert(x);
+			x.bigger_than.Insert(this_label);
+			this_label.smaller_than.Insert(x);
 		}
 	}
 	// 'orphans'
@@ -950,22 +950,22 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 
 	// final collection
 	l:=&LabelGraph{all:labels};
-	l.orphans.init();
-	l.roots.init();
-	l.middle.init();
-	l.leaves.init();
+	l.orphans.Init();
+	l.roots.Init();
+	l.middle.Init();
+	l.leaves.Init();
 	for _,x := range l.all{
 		num_isa:=x.isa.len();
 		num_examples:=x.examples.len();
 		if num_isa==0 && num_examples==0 {
-			l.orphans.insert(x);
+			l.orphans.Insert(x);
 			l.CreateOrFindLabel("uncategorized item").AddExample(x);
 		} else if num_isa!=0 && num_examples!=0 {
-			l.middle.insert(x);
+			l.middle.Insert(x);
 		} else if num_isa==0 {
-			l.roots.insert(x);		
+			l.roots.Insert(x);		
 		} else if num_examples==0 {
-			l.leaves.insert(x);
+			l.leaves.Insert(x);
 		} else {
 			fmt.Printf("fail!\n");
 			os.Exit(0)
@@ -1034,7 +1034,7 @@ func main() {
 	labelGraph := makeLabelGraph(g_srcLabels);
 	labelGraph.DumpJSON(false);
 	
-	//labelGraph.DumpInfo();
+	labelGraph.DumpInfo();
 
 }
 
