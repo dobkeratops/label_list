@@ -17,27 +17,35 @@ type SrcLabel struct {
 	translations map[string]string;
 }
 
-// compiled label, with complete links
-type Label struct {
-	name string;
-	isa []*Label;
-	abstract bool;
-	examples []*Label;
-	has []*Label;
-	part_of []*Label;
-	smaller_than []*Label;
-	bigger_than []*Label;
-	states []string;
-	minDistFromRoot int;
-	minDistFromLeaf int;
-}
 type Void struct{}
 
 type LabelPtrSet struct {
 	items map[*Label]Void;
 }
 
-func (self LabelPtrSet) insert(ptr *Label){ self.items[ptr]=Void{} }
+// compiled label, with complete links
+type Label struct {
+	name string;
+	isa LabelPtrSet;
+	initialized bool;
+	abstract bool;
+	examples LabelPtrSet;
+	has LabelPtrSet;
+	part_of LabelPtrSet;
+	smaller_than LabelPtrSet;
+	bigger_than LabelPtrSet;
+	states []string;
+	minDistFromRoot int;
+	minDistFromLeaf int;
+}
+
+func (self *LabelPtrSet) insert(ptr *Label){
+	self.items[ptr]=Void{}
+}
+func (self *LabelPtrSet) init(){
+	self.items=make(map[*Label]Void)
+}
+func (self *LabelPtrSet) len() int{return len(self.items)}
 
 func appendLabelPtrList(ls *[]*Label,l *Label){
 	*ls = append(*ls, l)
@@ -992,25 +1000,6 @@ var(g_srcLabels=[]SrcLabel{
 // ?! c++ address of member is useful for this, how to do?
 // generalise leaf/root tracing 'isa'/'examples'
 
-func computeRootDistances(labels map[string]*Label) {
-	
-	// find each root..
-	for _,x :=range labels{
-		if len(x.isa)>0{ //is this a root?
-			continue;
-		}
-		floodFillRootDist(x, 0)
-	}
-}
-func computeLeafDistances(labels map[string]*Label) {
-	// find each root..
-	for _,x :=range labels{
-		if len(x.examples)>0{ //is this a leaf?
-			continue;
-		}
-		floodFillLeafDist(x, 0)
-	}
-}
 
 func setMinInt(p *int,x int){
 	if x<*p {*p=x}
@@ -1019,56 +1008,47 @@ func setMaxInt(p *int,x int){
 	if x>*p {*p=x}
 }
 
-func floodFillRootDist(label *Label, dist int){
-	if label.minDistFromRoot<=dist{ return }// dont visit again; shorter path found already
-	setMinInt(&label.minDistFromRoot,dist)
-	for _,x := range label.examples {
-		floodFillRootDist(x,dist+1);
-	}
-}
-func floodFillLeafDist(label *Label, dist int){
-	if label.minDistFromLeaf<=dist{ return }// dont visit again; shorter path found already
-	setMinInt(&label.minDistFromLeaf,dist)
-	for _,x := range label.isa {	// go back one
-		floodFillLeafDist(x,dist+1);
-	}
-}
 
 func createLabel(n string) *Label{
 	l:=&Label{name:n, minDistFromRoot:0xffff,minDistFromLeaf:0xffff}
+	// todo - can Go avoid this? - c++ constructors
+	l.initialized=true;
+	l.isa.init();
+	l.examples.init();
+	l.has.init();
+	l.part_of.init();
+	l.has.init();
+	l.bigger_than.init();
+	l.smaller_than.init();
+	l.abstract=false;
+	
 	return l
 }
 
 type LabelGraph struct{
 	all map[string]*Label;
-	orphans []*Label; // no 'isa' or 'examples'
-	roots []*Label; // no 'isa'
-	leaves []*Label; // no 'examples'
-	middle []*Label; // both 'isa' and 'examples'
+	orphans LabelPtrSet; // no 'isa' or 'examples'
+	roots LabelPtrSet; // no 'isa'
+	leaves LabelPtrSet; // no 'examples'
+	middle LabelPtrSet; // both 'isa' and 'examples'
 }
 
 func (self LabelGraph) CreateOrFindLabel(newname string) *Label{
 	if lbl,ok:=self.all[newname];ok {return lbl;}
-	newlbl:=&Label{name:newname}
+	newlbl:=createLabel(newname);
 	self.all[newname]=newlbl;
 	return newlbl;
 }
 
-func InsertUniqueLabelPtr(list *[]*Label, item *Label) int{
-	for i,x :=range *list{if x==item {return i;}}
-	*list = append(*list, item);
-	return len(*list)-1;
-}
-
 func (self *Label) AddExample(other *Label){
 	if (self==other) {return;}	// something wrong!
-	InsertUniqueLabelPtr(&self.examples,other);
-	InsertUniqueLabelPtr(&other.isa,self);
+	self.examples.insert(other);
+	other.isa.insert(self);
 }
 func (self *Label) AddPart(other *Label){
 	if (self==other) {return;}	// something wrong!
-	InsertUniqueLabelPtr(&self.has,other);
-	InsertUniqueLabelPtr(&other.part_of,self);
+	self.has.insert(other);
+	other.part_of.insert(self);
 }
 
 func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
@@ -1090,43 +1070,41 @@ func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 		// any other means to reduce the cut-paste here..
 		
 		// "isa" and "examples" are reciprocated:-
-		for _,isa_name:= range src.isa{
-			isa_labelstruct:=findOrMakeLabel(isa_name)
-			appendLabelPtrList(&isa_labelstruct.examples, this_label)
-			appendLabelPtrList(&this_label.isa,  isa_labelstruct);
+		for _,isa_name:= range src.isa {
+			isa_labelstruct:=findOrMakeLabel(isa_name);
+			fmt.Print("%v",isa_labelstruct);
+			isa_labelstruct.examples.insert(this_label);
+			this_label.isa.insert(isa_labelstruct);
 		}
 		for _,ex:= range src.examples{
-			exl:=findOrMakeLabel(ex)
-			appendLabelPtrList(&exl.isa, this_label)
-			appendLabelPtrList(&this_label.examples, exl);
+			exl:=findOrMakeLabel(ex);
+			exl.isa.insert(this_label);
+			this_label.examples.insert(exl);
 		}
 		// "has" and "partof" are reciprocated
 		for _,has:= range src.has{
-			x:=findOrMakeLabel(has)
-			appendLabelPtrList(&x.part_of, this_label)
-			appendLabelPtrList(&this_label.has, x);
+			x:=findOrMakeLabel(has);
+			x.part_of.insert(this_label);
+			this_label.has.insert(x);
 		}
 		for _,p:= range src.part_of{
-			x:=findOrMakeLabel(p)
-			appendLabelPtrList(&x.has, this_label)
-			appendLabelPtrList(&this_label.part_of, x);
+			x:=findOrMakeLabel(p);
+			x.has.insert(this_label);
+			this_label.part_of.insert(x);
 		}
 
 		// "bigger than" and "smaller than" are reciprocated
 		for _,it:= range src.smaller_than{
 			x:=findOrMakeLabel(it)
-			x.smaller_than = append(x.smaller_than,this_label)
-			this_label.bigger_than = append(this_label.bigger_than, x)
+			x.smaller_than.insert(this_label);
+			this_label.bigger_than.insert(x);
 		}
 		for _,it:= range src.bigger_than{
 			x:=findOrMakeLabel(it)
-			x.bigger_than = append(x.bigger_than,this_label)
-			this_label.smaller_than = append(this_label.smaller_than, x)
+			x.bigger_than.insert(this_label);
+			this_label.smaller_than.insert(x);
 		}
 	}
-	computeLeafDistances(labels);
-	computeRootDistances(labels);
-
 	// 'orphans'
 	// collect them under 'uncategorized objects'
 
@@ -1134,18 +1112,22 @@ func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 
 	// final collection
 	l:=&LabelGraph{all:labels};
+	l.orphans.init();
+	l.roots.init();
+	l.middle.init();
+	l.leaves.init();
 	for _,x := range l.all{
-		num_isa:=len(x.isa);
-		num_examples:=len(x.examples);
+		num_isa:=x.isa.len();
+		num_examples:=x.examples.len();
 		if num_isa==0 && num_examples==0 {
-			appendLabelPtrList(&l.orphans, x);
+			l.orphans.insert(x);
 			l.CreateOrFindLabel("uncategorized item").AddExample(x);
 		} else if num_isa!=0 && num_examples!=0 {
-			appendLabelPtrList(&l.middle, x);
+			l.middle.insert(x);
 		} else if num_isa==0 {
-			appendLabelPtrList(&l.roots, x);
+			l.roots.insert(x);		
 		} else if num_examples==0 {
-			appendLabelPtrList(&l.leaves, x);
+			l.leaves.insert(x);
 		} else {
 			fmt.Printf("fail!\n");
 			os.Exit(0)
@@ -1158,18 +1140,20 @@ func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 	// Show results:-
 	// TODO formalise this as actual JSON
 
-func printContent(n string,xs[]*Label,postfix string){
-	if len(xs)==0 {return}
+func printContent(n string,xs LabelPtrSet,postfix string){
+	if xs.len()==0 {return}
 	fmt.Printf("\t\t\"%s\":[",n);
-	for i,x:=range xs{
-		fmt.Printf("\"%v\"",x.name)
-		if i<len(xs)-1 {fmt.Printf(",");} 
+	i:=len(xs.items);
+	for x,_:=range xs.items{
+		fmt.Printf("\"%v\"",x.name);
+		if i>1{fmt.Printf(",")}
+		i-=1;
 	}
 		
 	fmt.Printf("]%s\n",postfix);
 }
 
-func (self LabelGraph) DumpJSON(verbose bool){
+func (self *LabelGraph) DumpJSON(verbose bool){
 
 	fmt.Printf("{\n ");
 	for name,label :=range self.all {
@@ -1192,7 +1176,7 @@ func (self LabelGraph) DumpInfo(){
 	fmt.Printf("{\n ");
 	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels)\":%v \"leaf examples\":%v,\"orphans\":%v},\n",
 		len(self.all),
-		len(self.roots), len(self.middle),len(self.leaves), len(self.orphans));
+		self.roots.len(), self.middle.len(),self.leaves.len(), self.orphans.len());
 	printContent("leaves",self.leaves,",");
 	printContent("middle",self.middle,",");
 	printContent("roots",self.roots,",");
