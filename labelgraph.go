@@ -557,7 +557,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"plant":{
 		isa:[]string{"organism"},
-		examples:[]string{"tree","bush","flower","hedge","shrub","vines"},
+		examples:[]string{"tree","bush","flower","hedge","shrub","vines","weed","carnivorous plant","spider plant","indoor plant"},
+	},
+	"carnivorous plant":{
+		examples:[]string{"pitcher plant","venus fly trap"},
 	},
 	"rodent":{
 		isa:[]string{"mammal"},
@@ -593,7 +596,16 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"vegtable":{
 		isa:[]string{"plant"},
-		examples:[]string{"brocoli","peas","carrots","spinach","cellery","beansprouts","brussel sprouts","cauliflower","mushroom","peppers","courgette","leak","cabbage","onion","beans","tomato","lentils","tomato"},
+		examples:[]string{"brocoli","peas","spinach","cellery","brussel sprouts","cauliflower","mushroom","peppers","courgette","leak","cabbage","beans","tomato","lentils","tomato","watercress","lettuice","cucumber","squash (vegtable)","pumpkin","potato"},
+	},
+	"root vegtable":{
+		examples:[]string{"carrots","garlic","onion","tuber","turnip","parsnip","radish"},
+	},
+	"beans":{
+		examples:[]string{"haricot beans","kidney beans","runner beans","baked beans","soybeans","beansprouts","mung beans"},
+	},
+	"lentils":{
+		examples:[]string{"red lentils","green lentils","brown lentils","puy lentils","yellow lentils"},
 	},
 	"grains":{
 		isa:[]string{"food"},
@@ -692,7 +704,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"container":{
 		isa:[]string{"generic object"},
-		examples:[]string{"drum","barrel","cylinder","box","tray","basket","bag","shipping container"},
+		examples:[]string{"drum","barrel","cylinder","box","tray","basket","bag","shipping container","crate","carton"},
+	},
+	"crate":{
+		examples:[]string{"wooden crate","shipping crate","metal crate","bottle crate","milk crate","dog crate"},
 	},
 	"traffic sign":{
 		examples:[]string{"stop sign","no entry sign","no parking sign","speed limit","roadworks sign","hazard sign"},
@@ -711,7 +726,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	"musical instrument":{
 		examples:[]string{"piano","grand piano","string instrument","wind instrument","electronic musical instrument","keyboard (musical instrument)","sound synthesiser","drum (musical instrument)","tamborine","percussion instrument"},
 	},
-	"audo equipment":{isa:[]string{"generic object"},
+	"audio equipment":{isa:[]string{"generic object"},
 		examples:[]string{"loudspeaker","microphone","audio tape","vinyl record","record player"},
 	},
 	"percussion instrument":{
@@ -720,7 +735,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"wind instrument":{
 		examples:[]string{
-			"trumpet","trumpbone","flute","clarinet",
+			"trumpet","trumbone","flute","clarinet",
 			"musical pipe","mouth organ","bagpipes",
 		},
 	},
@@ -872,7 +887,16 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"surface material":{
 		abstract:true,
-		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiled","paving stones","brick","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug","porcelain","pottery","perspex","chipboard","paint","ceramic","stone","rock","building material","crystal","dolomite","smooth","rough","shiny","metalic","wet","carbon fibre","photovoltaic cell"},
+		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","tiled","paving stones","brick","concrete","plastic sheets","rubber","carpet","rug","perspex","chipboard","paint","ceramic","building material","smooth","rough","shiny","wet","carbon fibre","photovoltaic cell","expanded polystyrene"},
+	},
+	"mineral material":{
+		examples:[]string{"stone","rock","crystal","dolomite"},
+	},
+	"ceramic":{
+		examples:[]string{"porcelain","pottery"},
+	},
+	"metallic":{
+		examples:[]string{"corrugated metal","rusted metal","steel","aluminum","brass","copper","titanium","chrome","silver","gold"},
 	},
 	"tile":{
 		examples:[]string{"roof tile","bathroom tile","floor tile","decorative tile",},
@@ -886,6 +910,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"vegetation":{
 		isa:[]string{"plant"},
+		examples:[]string{"thick foilage","thin foilage","foilage","grass","moss","vines"},
 	},
 	"ground":{
 		examples:[]string{"soil","grass","park","lawn","field","sidewalk","pavement","road","runway","path","footpath"},
