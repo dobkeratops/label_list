@@ -989,6 +989,20 @@ func (self *Label) GetAllParents() *LabelPtrSet {
 	self.GetAllParentsSub(parents);
 	return parents;
 }
+func (lb *Label) GetAllExamplesSub(accum *LabelPtrSet){
+	for x:=range lb.examples.items{
+		if (!x.abstract){
+			accum.Insert(x)
+		}
+		x.GetAllExamplesSub(accum);
+	}
+}
+
+func (self *Label) GetAllExamples() *LabelPtrSet {
+	examples:=CreateLabelPtrSet();
+	self.GetAllExamplesSub(examples);
+	return examples;
+}
 
 func (self *Label) AddExample(other *Label){
 	if (self==other) {return;}	// something wrong!
@@ -1050,8 +1064,6 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 	}
 	// 'orphans'
 	// collect them under 'uncategorized objects'
-
-	
 
 	// final collection
 	l:=&LabelGraph{all:labels};
@@ -1138,13 +1150,14 @@ func (lg*LabelGraph) TestGraphIteration(){
 	printContent("dog parts",lg.Get("dog").GetAllParts(),",")
 	printContent("soldier parts",lg.Get("soldier").GetAllParts(),",")
 	printContent("lion isa",lg.Get("lion").GetAllParents(),",")
+	printContent("clothing examples",lg.Get("clothing").GetAllExamples(),",")
 }
 
 func main() {
 	// compile labels into a map for access by string, with links
 	labelGraph := makeLabelGraph(g_srcLabels);
 	labelGraph.DumpJSON(false);
-	//labelGraph.TestGraphIteration();
+	labelGraph.TestGraphIteration();
 	
 }
 
