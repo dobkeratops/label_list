@@ -93,7 +93,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"LR44","CR2032","SR516","LR1154"},
 	},
 	"generic object":{
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical","water related object","tube","control","pedal","key","masking tape","desktop object","trash","tent"},
+		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical","water related object","tube","control","pedal","key","masking tape","desktop object","trash","tent","workshop object"},
 	},
 	"control device":{
 		isa:[]string{"generic object"},
@@ -131,7 +131,10 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"broom","bike cleaning brush","toothbrush","hairbrush"},
 	},
 	"household object":{
-		examples:[]string{"furniture","kitchen appliance","kitchenware","ash tray","wall mirror","hand mirror","radiator","fan heater","storage heater","white goods"},
+		examples:[]string{"furniture","kitchen appliance","kitchenware","ash tray","wall mirror","hand mirror","radiator","fan heater","storage heater","white goods","bathroom object"},
+	},
+	"bathroom object":{
+		examples:[]string{"toothpaste tube","razor","shaving foam dispenser","electric razor","shampoo bottle","bar of soap","soap dispenser","toilet roll"},
 	},
 	"mirror":{
 		isa:[]string{"generic object"},
@@ -279,7 +282,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"workshop items":{
 		isa:[]string{"generic object"},
-		examples:[]string{"vice","lathe","clamp","spirit level","toolbox","drill bit","adjustable spanner","pliers"},
+		examples:[]string{"vice","lathe","clamp","spirit level","toolbox","drill bit","adjustable spanner","pliers","WD40","glue"},
 	},
 	"firearm":{
 		isa:[]string{"weapon"},
@@ -347,7 +350,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"vehicle":{
 		isa:[]string{"machine"},
-		examples:[]string{"aircraft","ship","boat","bicycle","motorbike","semi trailer","caravan","trailer"},
+		examples:[]string{"aircraft","aquatic vehicle","bicycle","motorbike","semi trailer","caravan","trailer"},
+	},
+	"aquatic vehicle":{
+		examples:[]string{"ship","boat","dinghy""jet ski","canoe","yacht","sailing boat","ocean liner","cruise ship","oil tanker","container ship","catamaran","lifeboat"},
 	},
 	"pose":{
 		abstract:true,
@@ -359,7 +365,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	"wheeled powered vehicle":{
 		isa:[]string{"wheeled vehicle"},
 		has:[]string{"wheel (car)","windscreen","license plate","headlight","wing mirror","tail light","indicator","bonnet"},
-		examples:[]string{"car","truck","van","bus","semi truck"},
+		examples:[]string{"car","truck","van","bus","semi truck","road sweeper","snow plough"},
 	},
 	"bicycle":{
 		has:[]string{"bicycle component"},
@@ -444,7 +450,7 @@ var(g_srcLabels=map[string]SrcLabel{
 
 	},
 	"construction machinery":{
-		examples:[]string{"bulldozer","excavator","mini excavator","road roller","wrecking ball","pile driver","digger","crane","tower crane"},
+		examples:[]string{"bulldozer","excavator","mini excavator","road roller","wrecking ball","pile driver","digger","crane","tower crane","cement mixer"},
 	},
 	"bulldozer":{
 		has:[]string{"bucket (bulldozer)","caterpillar tracks"},
