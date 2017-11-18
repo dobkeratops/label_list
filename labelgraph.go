@@ -739,7 +739,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"tree":{
 		isa:[]string{"plant"},
-		examples:[]string{"palm tree","fern","oak tree","conifer","evergreen","small tree","large tree"},
+		examples:[]string{"palm tree","fern","oak tree","conifer","evergreen","small tree","large tree","tree stump"},
 		has:[]string{"trunk (tree)","foilage"},
 	},
 	"bush":{
