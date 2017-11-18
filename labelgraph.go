@@ -115,7 +115,11 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"sculpture","painting","engraving"},
 	},
 	"urban feature":{
-		examples:[]string{"T junction","fork (road)","hairpin bend","cul-du-sac","dual carriage way","traffic island","round-a-bout","junction (road)","intersection (road)","flyover (road)","bypass (road)","cycle lane","bus lane","hard shoulder","road barrier","central reservation","tunnel entrance","canal","towpath"},	
+		examples:[]string{"road layout feature","road barrier","tunnel entrance","canal","towpath"},	
+	},
+	"road layout feature":{
+		examples:[]string{
+			"T junction","fork (road)","hairpin bend","cul-du-sac","dual carriage way","traffic island","round-a-bout","junction (road)","intersection (road)","flyover (road)","bypass (road)","cycle lane","bus lane","hard shoulder","central reservation","road bridge","road marking"},
 	},
 	"barrier":{
 		examples:[]string{"fence","railing","wall","low wall","level crossing barrier"},
@@ -409,7 +413,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"chicken","seagul","vulture","stalk","ostrich","duck","swan","bird of prey"},
 	},
 	"road marking":{
-		isa:[]string{"urban object"},
+		isa:[]string{"road layout feature"},
 		examples:[]string{"give way line","parking space","centreline","box junction","pedestrian crossing","striped reservation","lane divider","bus lane","cycle lane","stop line","chevron reservatoin","double white line","yellow lines (restricted parking)","double yellow lines (no parking)","disabled parking","mini roundabout","left turn lane","right turn lane","straight ahead lane","keep clear (road marking)","no entry (road marking)","slow (road marking)"},
 	},
 	"organism":{
