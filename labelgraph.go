@@ -51,6 +51,15 @@ func appendLabelPtrList(ls *[]*Label,l *Label){
 	*ls = append(*ls, l)
 }
 
+type Tmp struct{isa []string;};
+var(
+	g_foo=map[string]Tmp{
+		"68000":{isa:[]string{"microprocessor","motorola product"}},
+		"x86":{isa:[]string{"microprocessor","intel product"}},
+
+	}
+)
+
 var(g_srcLabels=[]SrcLabel{
 	{
 		name:"person",
@@ -260,6 +269,10 @@ var(g_srcLabels=[]SrcLabel{
 		examples:[]string{"hydaulic ram","gearwheel","crankshaft","drive shaft","drive belt","conveyor belt","gearbox","turbine","spring","hinge"},
 	},
 	{
+		name:"metal component",
+		examples:[]string{"ankerbolt","bolt","machine screw","nut","socket screw","stainless steel screw","setscrew","tek screw","threaded rod","throughbolt","tube connector","tube insert","washer","woodscrew"},
+	},
+	{
 		name:"room",
 		examples:[]string{"board room","office","atrium","domestic room"},
 	},
@@ -346,7 +359,7 @@ var(g_srcLabels=[]SrcLabel{
 	{
 		name:"hand tool",
 		has:[]string{"handle"},
-		examples:[]string{"hammer","spanner","screwdriver","chisel","saw","mallet","crowbar","hacksaw","wood saw","shovel","spade","axe"},
+		examples:[]string{"hammer","spanner","screwdriver","alan key","wrench","chisel","saw","mallet","crowbar","hacksaw","wood saw","shovel","spade","axe","rake"},
 	},
 	{
 		name:"workshop items",
