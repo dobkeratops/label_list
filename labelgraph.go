@@ -1352,7 +1352,6 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 	l.middle.Init();
 	l.leaves.Init();
 
-	//alphabetic map
 	for _,x := range l.all{
 		num_isa:=x.isa.len();
 		num_examples:=x.examples.len();
@@ -1370,28 +1369,11 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 			os.Exit(0)
 		}
 	}
+	//alphabetic/word map (search index)
 	l.BuildSearchIndex();
 	
 	return l;
 }
-
-/*
-building alphabetic map
-	alphabeticMap:= make(map[rune]*Label);
-		firstChar:=[]rune(x.name)[0];
-		_,ok:=alphabeticMap[firstChar];
-		if !ok{
-			als:=CreateLabel([]string([]rune(firstChar)));
-			als.abstract=true;
-			alphabeticMap[firstChar] =als;
-		}
-		al,_:=alphabeticMap[firstChar];
-		al.Insert(x);
-
-	for _,al :=range alphabeticMap{
-		l.all.Insert(al);
-	}
-*/
 
 func (lg *LabelGraph) BuildSearchIndex(){
 	alphabeticMap:= make(map[rune](map[string]*LabelPtrSet));
