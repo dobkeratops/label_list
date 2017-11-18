@@ -795,7 +795,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		},
 	},
 	"electrical applicance":{
-		examples:[]string{"kitchen applicance","consumer electronics","lamp","desk lamp","light bulb","ceiling light","lantern","security camera"},
+		examples:[]string{"kitchen applicance","consumer electronics","lamp","desk lamp","light bulb","ceiling light","lantern","security camera","film projector"},
 	},
 	"consumer electronics":{
 		isa:[]string{"electrical applicance"},
