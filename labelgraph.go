@@ -353,7 +353,18 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"aircraft","aquatic vehicle","bicycle","motorbike","semi trailer","caravan","trailer"},
 	},
 	"aquatic vehicle":{
-		examples:[]string{"ship","boat","dinghy""jet ski","canoe","yacht","sailing boat","ocean liner","cruise ship","oil tanker","container ship","catamaran","lifeboat"},
+		examples:[]string{
+			"ship","boat","dinghy","jet ski","canoe","yacht",
+			"sailing boat","ocean liner","cruise ship","oil tanker",
+			"container ship","catamaran","lifeboat",
+			"submarine","submersible","fishing boat","longboat",
+			"lifeboat","rowing boat","narrowboat","barge",
+			"military vessel"},
+	},
+	"military vessel":{
+		examples:[]string{
+			"destroyer","minesweeper","battleship","aircraft carrier",
+			"nuclear submarine","gunboat","military submarine"},
 	},
 	"pose":{
 		abstract:true,
