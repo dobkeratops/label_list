@@ -895,11 +895,11 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"pattern":{
 		abstract:true,
-		examples:[]string{"spotted","striped","mottled"},
+		examples:[]string{"spotted","regular striped","organic striped","mottled","dappled"},
 	},
 	"shape":{
 		abstract:true,
-		examples:[]string{"spherical","round","curved","straight","uneven","flat","long","tall","thin"},
+		examples:[]string{"spherical","round","curved","straight","uneven","flat","long","tall","thin","wedge","pyramid","torus","cuboid","prism","hexagonal extrusion","triangular extrusion","triangular","hexagonal","polygonal","polygonal extrusion"},
 	},
 })
 
