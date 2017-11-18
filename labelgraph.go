@@ -537,18 +537,18 @@ var(g_srcLabels=map[string]SrcLabel{
 		found_on:[]string{"farm"},
 	},
 	"bodypart":{
-		examples:[]string{"ear","eye","eyebrow","cheek","neck","nose","mouth","chin","elbow","foot","hand","snout","tail","leg","arm","torso","body","shoulder","hips","knee","ankle","hoof","paw"},
+		examples:[]string{"ear","eye","eyebrow","cheek","neck","nose","mouth","chin","elbow","foot","hand","snout","tail","leg","arm","torso","body","shoulder","hips","knee","ankle","hoof","paw","tentacle","limb"},
 	},
 	"head":{
 		isa:[]string{"bodypart"},
 		has:[]string{"eye","ear","nose","mouth"},
 	},	
 	"arm":{
-		isa:[]string{"bodypart"},
+		isa:[]string{"limb"},
 		has:[]string{"hand","elbow"},
 	},	
 	"leg":{
-		isa:[]string{"bodypart"},
+		isa:[]string{"limb"},
 		has:[]string{"knee","foot"},
 	},	
 	"elephant":{
@@ -696,7 +696,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"area":{
 		abstract:true,
-		examples:[]string{"urban area","industrial area","rural area","wilderness","desert","coastal area","residential area"},
+		examples:[]string{"urban area","industrial area","rural area","wilderness","desert","coastal area","residential area","forecourt","quadrangle (architecture)","courtyard","cloister"},
 	},
 	"marque":{
 		abstract:true,
@@ -817,12 +817,17 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"arthropod","mollusc","worm"},
 	},
 	"mollusc":{
-		examples:[]string{"snail","slug","octopus","squid"},
+		examples:[]string{"snail","slug","cephalopod"},
+	},
+	"cephalopod":{
+		has:[]string{"tentacle"},
+		examples:[]string{"octopus","squid"},
 	},
 	"marine animal":{
 		examples:[]string{"fish","octopus","squid","jellyfish","shrimp","lobster","crab","starfish","sea urchin"},
 	},
 	"fish":{
+		has:[]string{"fin"},
 		examples:[]string{"cod","tuna","mackerel","salmon","pirhana","goldfish","red lionfish","carp","swordfish","flying fish"},
 	},
 	"vertebrate":{
