@@ -44,6 +44,11 @@ func (self *LabelPtrSet) Insert(ptr *Label){
 func (self *LabelPtrSet) Init(){
 	self.items=make(map[*Label]Void)
 }
+func CreateLabelPtrSet() *LabelPtrSet{
+	ls := &LabelPtrSet{}
+	ls.Init()
+	return ls;
+}
 func (self *LabelPtrSet) len() int{return len(self.items)}
 
 func appendLabelPtrList(ls *[]*Label,l *Label){
@@ -942,6 +947,49 @@ func (self LabelGraph) CreateOrFindLabel(newname string) *Label{
 	return newlbl;
 }
 
+// traverse the graph to determine if the label is an
+// example of an arbitrary given label. The graph does
+// not replicate everything inherited directly at each node
+func (self *Label) IsExampleOf(l *Label) bool {
+	for x,_ :=range self.isa.items {
+		if x == l {return true;}
+		if l.IsExampleOf(l) {return true;}
+	}
+	return false;
+}
+
+func (self *Label) GetAllPartsSub(ls *LabelPtrSet) {
+	for x,_ :=range self.has.items{
+		ls.Insert(x)
+	}
+	for x,_ :=range self.isa.items{
+		x.GetAllPartsSub(ls)
+	}
+}
+
+// recurse through all the ancestors of a label
+// to gather the full set of potential parts
+func (self *Label) GetAllParts() *LabelPtrSet {
+	parts:=CreateLabelPtrSet();
+	self.GetAllPartsSub(parts);
+	return parts;
+}
+
+func (lb *Label) GetAllParentsSub(parents *LabelPtrSet){
+	for x:=range lb.isa.items{
+		if (!x.abstract){
+			parents.Insert(x)
+		}
+		x.GetAllParentsSub(parents);
+	}
+}
+
+func (self *Label) GetAllParents() *LabelPtrSet {
+	parents:=CreateLabelPtrSet();
+	self.GetAllParentsSub(parents);
+	return parents;
+}
+
 func (self *Label) AddExample(other *Label){
 	if (self==other) {return;}	// something wrong!
 	self.examples.Insert(other);
@@ -1035,7 +1083,7 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 	// Show results:-
 	// TODO formalise this as actual JSON
 
-func printContent(n string,xs LabelPtrSet,postfix string){
+func printContent(n string,xs *LabelPtrSet,postfix string){
 	if xs.len()==0 {return}
 	fmt.Printf("\t\t\"%s\":[",n);
 	i:=len(xs.items);
@@ -1048,6 +1096,10 @@ func printContent(n string,xs LabelPtrSet,postfix string){
 	fmt.Printf("]%s\n",postfix);
 }
 
+func (self *LabelGraph) Get(nm string) *Label{
+	return self.all[nm];
+}
+
 func (self *LabelGraph) DumpJSON(verbose bool){
 
 	fmt.Printf("{\n ");
@@ -1058,10 +1110,10 @@ func (self *LabelGraph) DumpJSON(verbose bool){
 			fmt.Printf("\t\tminDistFromRoot:%v\n", label.minDistFromRoot);
 			fmt.Printf("\t\tminDistFromLeaf:%v\n", label.minDistFromLeaf);
 		}
-		printContent("isa",label.isa,",");
-		printContent("examples",label.examples,",");
-		printContent("has",label.has,",");
-		printContent("part_of",label.part_of,"");
+		printContent("isa",&label.isa,",");
+		printContent("examples",&label.examples,",");
+		printContent("has",&label.has,",");
+		printContent("part_of",&label.part_of,"");
 		fmt.Printf("\t},\n")
 	}
 	fmt.Printf("}\n ");
@@ -1072,27 +1124,28 @@ func (self LabelGraph) DumpInfo(){
 	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels)\":%v \"leaf examples\":%v,\"orphans\":%v},\n",
 		len(self.all),
 		self.roots.len(), self.middle.len(),self.leaves.len(), self.orphans.len());
-	printContent("leaves",self.leaves,",");
-	printContent("middle",self.middle,",");
-	printContent("roots",self.roots,",");
-	printContent("orphans",self.orphans,"");
+	printContent("leaves",&self.leaves,",");
+	printContent("middle",&self.middle,",");
+	printContent("roots",&self.roots,",");
+	printContent("orphans",&self.orphans,"");
 	
 	fmt.Printf("}\n ");
 }
 
-func (l LabelGraph) Get(n string) *Label{
-	return l.all[n]
+// test the functions for traversing the graph to
+// get full parts, parents etc.
+func (lg*LabelGraph) TestGraphIteration(){
+	printContent("dog parts",lg.Get("dog").GetAllParts(),",")
+	printContent("soldier parts",lg.Get("soldier").GetAllParts(),",")
+	printContent("lion isa",lg.Get("lion").GetAllParents(),",")
 }
 
 func main() {
-
 	// compile labels into a map for access by string, with links
-
 	labelGraph := makeLabelGraph(g_srcLabels);
 	labelGraph.DumpJSON(false);
+	//labelGraph.TestGraphIteration();
 	
-//	labelGraph.DumpInfo();
-
 }
 
 
