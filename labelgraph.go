@@ -825,7 +825,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"surface material":{
 		abstract:true,
-		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiles","paving stones","bricks","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug","porcelain","pottery","perspex","chipboard","paint","ceramic","stone","rock","building material","crystal","dolomite","smooth","rough","shiny","metalic","wet"},
+		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiles","paving stones","bricks","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug","porcelain","pottery","perspex","chipboard","paint","ceramic","stone","rock","building material","crystal","dolomite","smooth","rough","shiny","metalic","wet","carbon fibre"},
 	},
 	"stone":{
 		examples:[]string{"granite","limestone","sandstone","marble","ingeous rock","sedimentary rock","metamorphic rock","pumice","volcanic rock","stratified rock",},
