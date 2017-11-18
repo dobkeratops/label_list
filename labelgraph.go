@@ -1157,7 +1157,7 @@ func main() {
 	// compile labels into a map for access by string, with links
 	labelGraph := makeLabelGraph(g_srcLabels);
 	labelGraph.DumpJSON(false);
-	labelGraph.TestGraphIteration();
+//	labelGraph.TestGraphIteration();
 	
 }
 
