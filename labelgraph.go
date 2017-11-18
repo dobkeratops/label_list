@@ -224,7 +224,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"trunk (elephant)","trunk (tree)","trunk (car)"},
 	},
 	"building part":{
-		examples:[]string{"door","window (building)","wall","buttress","archway","pillar","chimney","dome","escalator","elevator"},
+		examples:[]string{"door","window (building)","wall","buttress","archway","pillar","chimney","spire","dome","escalator","elevator","battlements","turret (building)"},
 	},
 	"dome":{
 		examples:[]string{"geodesic dome","onion dome","metal dome","stone dome"},
@@ -246,7 +246,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"lighthouse","pier","harbour","jetty","beach","cliff","river estuary"},
 	},
 	"vehicle component":{
-		examples:[]string{"land vehicle component","engine","cabin","turret","window (vehicle)"},
+		examples:[]string{"land vehicle component","engine","cabin","turret (vehicle)","window (vehicle)"},
 		
 	},
 	"window (vehicle)":{
@@ -345,7 +345,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"tank (vehicle)":{
 		isa:[]string{"military vehicle"},
-		has:[]string{"turret","gun","caterpillar tracks","hatch"},
+		has:[]string{"turret (vehicle)","gun","caterpillar tracks","hatch"},
 	},
 	"tank":{
 		isa:[]string{"generic object"},
