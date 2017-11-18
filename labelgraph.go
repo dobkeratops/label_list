@@ -132,7 +132,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"road layout feature":{
 		examples:[]string{
-			"T junction","fork (road)","hairpin bend","cul-du-sac","dual carriage way","traffic island","round-a-bout","junction (road)","intersection (road)","flyover (road)","bypass (road)","cycle lane","bus lane","hard shoulder","central reservation","road bridge","road marking"},
+			"T junction","fork (road)","hairpin bend","cul-du-sac","dual carriage way","traffic island","round-a-bout","junction (road)","intersection (road)","flyover (road)","bypass (road)","cycle lane","bus lane","hard shoulder","central reservation","road bridge","road marking","speed bump"},
 	},
 	"barrier":{
 		examples:[]string{"fence","railing","wall","low wall","level crossing barrier"},
@@ -596,7 +596,13 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"vegtable":{
 		isa:[]string{"plant"},
-		examples:[]string{"brocoli","peas","spinach","cellery","brussel sprouts","cauliflower","mushroom","peppers","courgette","leak","cabbage","beans","tomato","lentils","tomato","watercress","lettuice","cucumber","squash (vegtable)","pumpkin","potato"},
+		examples:[]string{"leafy vegtable","brocoli","peas","cellery","brussel sprouts","cauliflower","mushroom","peppers","courgette","leak","beans","tomato","lentils","tomato","watercress","cucumber","squash (vegtable)","pumpkin","potato"},
+	},
+	"potato":{
+		examples:[]string{"roast potato","baked potato","boiled potato","new potatos","french fries","potato chips (crisps)","potato wedges"},
+	},
+	"leafy vegtable":{
+		examples:[]string{"spinach","cabbage","lettuice","kale"},
 	},
 	"root vegtable":{
 		examples:[]string{"carrots","garlic","onion","tuber","turnip","parsnip","radish"},
@@ -609,7 +615,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"grains":{
 		isa:[]string{"food"},
-		examples:[]string{"rice","wheat","oats","barley"},
+		examples:[]string{"rice","wheat","oats","barley","maize"},
+	},
+	"maize":{
+		examples:[]string{"corn on the cob","popcorn","sweetcorn"},
 	},
 	"rice":{
 		examples:[]string{"white rice","brown rice","long grain rice","wild rice"},
@@ -622,7 +631,16 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"enclosure":{
 		isa:[]string{"generic object"},
-		examples:[]string{"cubicle","housing (mechanical)","casing","fence","electrical enclosure"},
+		examples:[]string{"cubicle","housing (mechanical)","casing","fence","electrical enclosure","animal enclosure","cage"},
+	},
+	"animal enclosure":{
+		examples:[]string{"pen (enclosure)","pet enclosure","animal cage"},
+	},
+	"pet enclosure":{
+		examples:[]string{"fish tank","birdcage","kennel","fish bowl"},
+	},
+	"cage":{
+		examples:[]string{"birdcage","animal cage","shark cage"},
 	},
 	"substance":{
 		examples:[]string{"solid","liquid","emulsion","gas","organic substance","inorganic substance"},
@@ -802,7 +820,10 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"snail","slug","octopus","squid"},
 	},
 	"marine animal":{
-		examples:[]string{"fish","octopus","squid","jellyfish","shrimp","lobster","crab"},
+		examples:[]string{"fish","octopus","squid","jellyfish","shrimp","lobster","crab","starfish","sea urchin"},
+	},
+	"fish":{
+		examples:[]string{"cod","tuna","mackerel","salmon","pirhana","goldfish","red lionfish","carp","swordfish","flying fish"},
 	},
 	"vertebrate":{
 		isa:[]string{"animal"},
@@ -857,11 +878,17 @@ var(g_srcLabels=map[string]SrcLabel{
 		},
 	},
 	"electrical applicance":{
-		examples:[]string{"kitchen applicance","consumer electronics","lamp","desk lamp","light bulb","ceiling light","lantern","security camera","film projector"},
+		examples:[]string{"kitchen applicance","consumer electronics","electric lighting","lantern","electronic camera","film projector"},
+	},
+	"electric lighting":{
+		examples:[]string{"lamp","desk lamp","light bulb","ceiling light","street lamp","bedside lamp","wall light","fluorescent lamp","LED light","electric torch","floodlight"},
+	},
+	"electronic camera":{
+		examples:[]string{"security camera","action camera","camcorder","video camera","TV camera","VR camera","stereo camera","DSLR"},
 	},
 	"consumer electronics":{
 		isa:[]string{"electrical applicance"},
-		examples:[]string{"TV","monitor","PC","laptop","tablet computer","smartphone","telephone","radio","game console","sound system","speakers","network switch","network hub","camera","cam corder","remote control handset","electric torch","3d printer"},
+		examples:[]string{"TV","monitor","PC","laptop","tablet computer","smartphone","telephone","radio","game console","sound system","speakers","network switch","network hub","camera","camcorder","remote control handset","electric torch","3d printer"},
 	},
 	"mounted object":{
 		isa:[]string{"generic object"},
@@ -869,7 +896,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"lighting":{
 		isa:[]string{"generic object"},
-		examples:[]string{"candle","light bulb","flourescent light","LED light","torch","electric torch","burning torch","lantern","lamp","gas lamp","floodlight"},
+		examples:[]string{"candle","light bulb","electric lighting","torch","burning torch","lantern","lamp","gas lamp"},
 	},
 	"chandelier":{
 		isa:[]string{"ornament","light fitting","ceiling mounted"},
@@ -887,7 +914,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"surface material":{
 		abstract:true,
-		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","tiled","paving stones","brick","concrete","plastic sheets","rubber","carpet","rug","perspex","chipboard","paint","ceramic","building material","smooth","rough","shiny","wet","carbon fibre","photovoltaic cell","expanded polystyrene"},
+		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","clay","vegetation","tiled","paving stones","brick","concrete","plastic sheets","rubber","carpet","rug","perspex","chipboard","paint","ceramic","building material","smooth","rough","shiny","wet","carbon fibre","photovoltaic cell","expanded polystyrene"},
 	},
 	"mineral material":{
 		examples:[]string{"stone","rock","crystal","dolomite"},
@@ -916,7 +943,13 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"soil","grass","park","lawn","field","sidewalk","pavement","road","runway","path","footpath"},
 	},
 	"road":{
-		examples:[]string{"cobbled road","tarmac road","brick road","dirt road","brick road"},
+		examples:[]string{"cobbled road","tarmac road","brick road","dirt road","brick road","coutry lane","dual carriageway","freeway"},
+	},
+	"freeway":{
+		translations:map[string]string{
+			"british english":"motorway",
+			"german":"autobahn",
+		},
 	},
 	"pattern":{
 		abstract:true,
