@@ -1015,7 +1015,8 @@ type LabelGraph struct{
 	// alphabetic search index:-
 	// for every character,
 	//   a map of words -> LabelPtrSet (every label holding the map)
-	alphabeticSearchIndex map[rune](map[string]*LabelPtrSet);	// indexed by a-z etc
+	labelsByChar map[rune](map[string]*LabelPtrSet);	// indexed by a-z etc
+	labelsByWord map[string]*LabelPtrSet;
 }
 
 func (self *LabelGraph) CreateOrFindLabel(newname string) *Label{
@@ -1193,10 +1194,20 @@ building alphabetic map
 
 func (lg *LabelGraph) BuildSearchIndex(){
 	alphabeticMap:= make(map[rune](map[string]*LabelPtrSet));
+	lg.labelsByWord = make(map[string]*LabelPtrSet);
 
 	for _,l :=range(lg.all) {
 
-		words :=strings.Fields(l.name);
+		// strip out the brackets from the label name
+		filteredName := l.name;
+		fnr:=[]rune(filteredName);
+		for i,x :=range fnr{
+			if x=='(' || x==')' { fnr[i]=' ' }
+		}
+		filteredName = string(fnr);
+
+		// step through all the words in the label name
+		words :=strings.Fields(filteredName);
 		for _,word :=range words {
 			firstChar:=[]rune(word)[0];
 			// get a string map for the char
@@ -1211,10 +1222,12 @@ func (lg *LabelGraph) BuildSearchIndex(){
 				ls=CreateLabelPtrSet();
 				lps[word]=ls;
 			}
+			// cache the label-ptr-set by the entire wordlist.
+			lg.labelsByWord[word]=ls;
 			ls.Insert(l)
 		}
 	}
-	lg.alphabeticSearchIndex = alphabeticMap;
+	lg.labelsByChar = alphabeticMap;
 }
 	// Show results:-
 	// TODO formalise this as actual JSON
@@ -1279,7 +1292,7 @@ func (lg*LabelGraph) TestGraphIteration(){
 
 func (lg *LabelGraph) GetLabelsContainingWordByChar(c rune) *LabelPtrSet {
 	acc:=CreateLabelPtrSet()
-	for _,ls :=range lg.alphabeticSearchIndex['c'] {
+	for _,ls :=range lg.labelsByChar['c'] {
 		for l,_ :=range ls.items {
 			acc.Insert(l);
 		}
@@ -1292,6 +1305,12 @@ func (lg *LabelGraph) TestAlphabetic(){
 	ls:=lg.GetLabelsContainingWordByChar('c');
 	for x,_ := range ls.items{
 		fmt.Print(x.name,"\n");
+	}
+}
+
+func (lg *LabelGraph) DumpWords(){
+	for word,_ :=range lg.labelsByWord {
+		fmt.Print(word,"\n");
 	}
 }
 
