@@ -647,7 +647,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"urban area","industrial area","rural area","wilderness","desert","coastal area"},
 	},
 	"marque":{
-		isa:[]string{"metalabel"},
+		abstract:true,
 		examples:[]string{"BMW","Ferrari","Maserati","Fiat","Ford","General Motors","Renault","Porsche","Mercedes"},
 	},
 	"metal object":{
@@ -820,13 +820,15 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"flatscreen TV","LCD TV","plasma TV","LED TV","OLED TV","curved TV","CRT TV"},
 	},
 	"geographic feature":{
+		abstract:true,
 		examples:[]string{"mountain","hill","coastline","volcano","plain","valley","cave","forest"},
 	},
 	"surface material":{
-		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiles","paving stones","bricks","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug","porcelain","pottery","perspex","chipboard","paint","ceramic","stone","rock","building material","crystal","dolomite"},
+		abstract:true,
+		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","vegetation","grass","tiles","paving stones","bricks","concrete","corrugated metal","metal","rusted metal","plastic sheets","rubber","foilage","carpet","rug","porcelain","pottery","perspex","chipboard","paint","ceramic","stone","rock","building material","crystal","dolomite","smooth","rough","shiny","metalic","wet"},
 	},
 	"stone":{
-		examples:[]string{"granite","limestone","sandstone","marble","ingeous rock","sedimentary rock","metamorphic rock"},
+		examples:[]string{"granite","limestone","sandstone","marble","ingeous rock","sedimentary rock","metamorphic rock","pumice","volcanic rock","stratified rock",},
 	},
 	"grass":{
 		isa:[]string{"vegetation","plant"},
@@ -840,6 +842,14 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"road":{
 		examples:[]string{"cobbled road","tarmac road","brick road","dirt road","brick road"},
+	},
+	"pattern":{
+		abstract:true,
+		examples:[]string{"spotted","striped","mottled"},
+	},
+	"shape":{
+		abstract:true,
+		examples:[]string{"spherical","round","curved","straight","uneven","flat","long","tall","thin"},
 	},
 })
 
@@ -915,6 +925,8 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 		this_label:=findOrMakeLabel(name)
 		// TODO does go have field pointers or
 		// any other means to reduce the cut-paste here..
+
+		this_label.abstract=src.abstract;
 		
 		// "isa" and "examples" are reciprocated:-
 		for _,isa_name:= range src.isa {
