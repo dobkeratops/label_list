@@ -140,7 +140,7 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"urban feature",
-		examples:[]string{"T junction","fork (road)","hairpin bend","cul-du-sac","dual carriage way","traffic island","round-a-bout","junction (road)","intersection (road)","flyover (road)","bypass (road)","cycle lane","bus name","hard shoulder","road barrier","central reservation","tunnel entrance","canal","towpath"},	
+		examples:[]string{"T junction","fork (road)","hairpin bend","cul-du-sac","dual carriage way","traffic island","round-a-bout","junction (road)","intersection (road)","flyover (road)","bypass (road)","cycle lane","bus lane","hard shoulder","road barrier","central reservation","tunnel entrance","canal","towpath"},	
 	},
 	{
 		name:"barrier",
@@ -161,7 +161,12 @@ var(g_srcLabels=[]SrcLabel{
 	},
 	{
 		name:"household object",
-		examples:[]string{"furniture","kitchen appliance","kitchenware","ash tray","mirror","radiator","fan heater","storage heater","white goods"},
+		examples:[]string{"furniture","kitchen appliance","kitchenware","ash tray","wall mirror","hand mirror","radiator","fan heater","storage heater","white goods"},
+	},
+	{
+		name:"mirror",
+		isa:[]string{"generic object"},
+		examples:[]string{"wing mirror","rear view mirror","security mirror","hand mirror","wall mirror","desk mirror"},
 	},
 	{
 		name:"domestic appliance",
@@ -708,14 +713,18 @@ var(g_srcLabels=[]SrcLabel{
 		examples:[]string{"cubicle","housing (mechanical)","casing","fence","electrical enclosure"},
 	},
 	{
+		name:"substance",
+		examples:[]string{"solid","liquid","emulsion","gas","organic substance","inorganic substance"},
+	},
+	{
 		name:"toxic substance",
 		isa:[]string{"substance"},
 		examples:[]string{"radioactive waste","chlorine gas","acid","bleach"},
 	},
 	{
 		name:"water",
-		isa:[]string{"substance"},
-		examples:[]string{"fresh water","drinking water","mineral water","lake","freshwater","salt water","sea","river","waterfall"},
+		isa:[]string{"liquid"},
+		examples:[]string{"fresh water","drinking water","mineral water","lake","freshwater","river water","polluted water","salt water","sea","river","waterfall"},
 	},
 	{
 		name:"agricultural tool",
@@ -1071,26 +1080,17 @@ func makeLabelGraph(srcLabels []SrcLabel) *LabelGraph{
 		
 		// "isa" and "examples" are reciprocated:-
 		for _,isa_name:= range src.isa {
-			isa_labelstruct:=findOrMakeLabel(isa_name);
-			fmt.Print("%v",isa_labelstruct);
-			isa_labelstruct.examples.insert(this_label);
-			this_label.isa.insert(isa_labelstruct);
+			findOrMakeLabel(isa_name).AddExample(this_label);
 		}
 		for _,ex:= range src.examples{
-			exl:=findOrMakeLabel(ex);
-			exl.isa.insert(this_label);
-			this_label.examples.insert(exl);
+			this_label.AddExample(findOrMakeLabel(ex));
 		}
 		// "has" and "partof" are reciprocated
 		for _,has:= range src.has{
-			x:=findOrMakeLabel(has);
-			x.part_of.insert(this_label);
-			this_label.has.insert(x);
+			this_label.AddPart(findOrMakeLabel(has));
 		}
 		for _,p:= range src.part_of{
-			x:=findOrMakeLabel(p);
-			x.has.insert(this_label);
-			this_label.part_of.insert(x);
+			findOrMakeLabel(p).AddPart(this_label);
 		}
 
 		// "bigger than" and "smaller than" are reciprocated
