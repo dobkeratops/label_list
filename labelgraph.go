@@ -34,8 +34,6 @@ type Label struct {
 	smaller_than LabelPtrSet;
 	bigger_than LabelPtrSet;
 	states []string;
-	minDistFromRoot int;
-	minDistFromLeaf int;
 }
 
 func (self *LabelPtrSet) Insert(ptr *Label){
@@ -50,10 +48,6 @@ func CreateLabelPtrSet() *LabelPtrSet{
 	return ls;
 }
 func (self *LabelPtrSet) len() int{return len(self.items)}
-
-func appendLabelPtrList(ls *[]*Label,l *Label){
-	*ls = append(*ls, l)
-}
 
 
 var(g_srcLabels=map[string]SrcLabel{
@@ -991,7 +985,7 @@ func setMaxInt(p *int,x int){
 }
 
 func createLabel(n string) *Label{
-	l:=&Label{name:n, minDistFromRoot:0xffff,minDistFromLeaf:0xffff}
+	l:=&Label{name:n}
 	// todo - can Go avoid this? - c++ constructors
 	l.initialized=true;
 	l.isa.Init();
@@ -1255,10 +1249,6 @@ func (self *LabelGraph) DumpJSON(verbose bool){
 	for name,label :=range self.all {
 		fmt.Printf("\t\"%v\":{\n ",name);
 
-		if (verbose){
-			fmt.Printf("\t\tminDistFromRoot:%v\n", label.minDistFromRoot);
-			fmt.Printf("\t\tminDistFromLeaf:%v\n", label.minDistFromLeaf);
-		}
 		printContent("isa",&label.isa,",");
 		printContent("examples",&label.examples,",");
 		printContent("has",&label.has,",");
@@ -1267,7 +1257,7 @@ func (self *LabelGraph) DumpJSON(verbose bool){
 	}
 	fmt.Printf("}\n ");
 }
-func (self LabelGraph) DumpInfo(){
+func (self *LabelGraph) DumpInfo(){
 
 	fmt.Printf("{\n ");
 	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels)\":%v \"leaf examples\":%v,\"orphans\":%v},\n",
@@ -1283,7 +1273,7 @@ func (self LabelGraph) DumpInfo(){
 
 // test the functions for traversing the graph to
 // get full parts, parents etc.
-func (lg*LabelGraph) TestGraphIteration(){
+func (lg *LabelGraph) TestGraphIteration(){
 	printContent("dog parts",lg.Get("dog").GetAllParts(),",")
 	printContent("soldier parts",lg.Get("soldier").GetAllParts(),",")
 	printContent("lion isa",lg.Get("lion").GetAllParents(),",")
