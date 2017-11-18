@@ -1,5 +1,5 @@
 package main
-import ("fmt";"os")
+import ("fmt";"os";"strings")
 
 // raw label description to be read from JSON
 type SrcLabel struct { 
@@ -435,7 +435,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"road marking":{
 		isa:[]string{"road layout feature"},
-		examples:[]string{"give way line","parking space","centreline","box junction","pedestrian crossing","striped reservation","lane divider","bus lane","cycle lane","stop line","chevron reservatoin","double white line","yellow lines (restricted parking)","double yellow lines (no parking)","disabled parking","mini roundabout","left turn lane","right turn lane","straight ahead lane","keep clear (road marking)","no entry (road marking)","slow (road marking)"},
+		examples:[]string{"give way line","parking space","centreline","box junction","pedestrian crossing","striped reservation","lane divider","bus lane","cycle lane","stop line","chevron reservation","double white line","yellow lines (restricted parking)","double yellow lines (no parking)","disabled parking","mini roundabout","left turn lane","right turn lane","straight ahead lane","keep clear (road marking)","no entry (road marking)","slow (road marking)"},
 	},
 	"organism":{
 		isa:[]string{"natural"},
@@ -990,7 +990,6 @@ func setMaxInt(p *int,x int){
 	if x>*p {*p=x}
 }
 
-
 func createLabel(n string) *Label{
 	l:=&Label{name:n, minDistFromRoot:0xffff,minDistFromLeaf:0xffff}
 	// todo - can Go avoid this? - c++ constructors
@@ -1003,7 +1002,6 @@ func createLabel(n string) *Label{
 	l.bigger_than.Init();
 	l.smaller_than.Init();
 	l.abstract=false;
-	
 	return l
 }
 
@@ -1013,6 +1011,11 @@ type LabelGraph struct{
 	roots LabelPtrSet; // no 'isa'
 	leaves LabelPtrSet; // no 'examples'
 	middle LabelPtrSet; // both 'isa' and 'examples'
+
+	// alphabetic search index:-
+	// for every character,
+	//   a map of words -> LabelPtrSet (every label holding the map)
+	alphabeticSearchIndex map[rune](map[string]*LabelPtrSet);	// indexed by a-z etc
 }
 
 func (self *LabelGraph) CreateOrFindLabel(newname string) *Label{
@@ -1146,6 +1149,8 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 	l.roots.Init();
 	l.middle.Init();
 	l.leaves.Init();
+
+	//alphabetic map
 	for _,x := range l.all{
 		num_isa:=x.isa.len();
 		num_examples:=x.examples.len();
@@ -1163,10 +1168,54 @@ func makeLabelGraph(srcLabels map[string]SrcLabel) *LabelGraph{
 			os.Exit(0)
 		}
 	}
+	l.BuildSearchIndex();
 	
 	return l;
 }
 
+/*
+building alphabetic map
+	alphabeticMap:= make(map[rune]*Label);
+		firstChar:=[]rune(x.name)[0];
+		_,ok:=alphabeticMap[firstChar];
+		if !ok{
+			als:=CreateLabel([]string([]rune(firstChar)));
+			als.abstract=true;
+			alphabeticMap[firstChar] =als;
+		}
+		al,_:=alphabeticMap[firstChar];
+		al.Insert(x);
+
+	for _,al :=range alphabeticMap{
+		l.all.Insert(al);
+	}
+*/
+
+func (lg *LabelGraph) BuildSearchIndex(){
+	alphabeticMap:= make(map[rune](map[string]*LabelPtrSet));
+
+	for _,l :=range(lg.all) {
+
+		words :=strings.Fields(l.name);
+		for _,word :=range words {
+			firstChar:=[]rune(word)[0];
+			// get a string map for the char
+			lps,ok:=alphabeticMap[firstChar];
+			if !ok{
+				lps=make(map[string]*LabelPtrSet);
+				alphabeticMap[firstChar]=lps;
+			}
+
+			ls,ok:=lps[word]
+			if !ok{
+				ls=CreateLabelPtrSet();
+				lps[word]=ls;
+			}
+			ls.Insert(l)
+		}
+	}
+	lg.alphabeticSearchIndex = alphabeticMap;
+}
 	// Show results:-
 	// TODO formalise this as actual JSON
 
@@ -1228,11 +1277,30 @@ func (lg*LabelGraph) TestGraphIteration(){
 	printContent("clothing examples",lg.Get("clothing").GetAllExamples(),",")
 }
 
+func (lg *LabelGraph) GetLabelsContainingWordByChar(c rune) *LabelPtrSet {
+	acc:=CreateLabelPtrSet()
+	for _,ls :=range lg.alphabeticSearchIndex['c'] {
+		for l,_ :=range ls.items {
+			acc.Insert(l);
+		}
+	}
+	return acc;
+}
+
+func (lg *LabelGraph) TestAlphabetic(){
+	fmt.Print("test alphabetic indexing of labels:-\n");
+	ls:=lg.GetLabelsContainingWordByChar('c');
+	for x,_ := range ls.items{
+		fmt.Print(x.name,"\n");
+	}
+}
+
 func main() {
 	// compile labels into a map for access by string, with links
 	labelGraph := makeLabelGraph(g_srcLabels);
 	labelGraph.DumpJSON(false);
 //	labelGraph.TestGraphIteration();
+//	labelGraph.TestAlphabetic();
 	
 }
 
