@@ -3,17 +3,17 @@ import ("fmt";"os";"strings")
 
 // raw label description to be read from JSON
 type SrcLabel struct { 
-	isa []string;
-	examples []string;
-	part_of []string;
-	has []string;
-	smaller_than []string;
-	bigger_than []string;
-	found_in []string;
-	states []string;
-	abstract bool;
-	found_on []string;
-	translations map[string]string;
+	isa			[]string;
+	examples	[]string;
+	part_of		[]string;
+	has			[]string;
+	smaller_than	[]string;
+	bigger_than	[]string;
+	found_in	[]string;
+	states		[]string;
+	abstract	bool;
+	found_on	[]string;
+	translations	map[string]string;
 }
 
 type Void struct{}
@@ -24,15 +24,15 @@ type LabelPtrSet struct {
 
 // compiled label, with complete links
 type Label struct {
-	name string;
-	isa LabelPtrSet;
-	initialized bool;
-	abstract bool;
-	examples LabelPtrSet;
-	has LabelPtrSet;
-	part_of LabelPtrSet;
-	smaller_than LabelPtrSet;
-	bigger_than LabelPtrSet;
+	name	string;
+	isa	LabelPtrSet;
+	initialized	bool;
+	abstract	bool;
+	examples	LabelPtrSet;
+	has	LabelPtrSet;
+	part_of	LabelPtrSet;
+	smaller_than	LabelPtrSet;
+	bigger_than	LabelPtrSet;
 	states []string;
 }
 
@@ -60,7 +60,11 @@ var(g_srcLabels=map[string]SrcLabel{
 	// Motivation to keep in the graph structure: we could mimick wikipedia's category structure.
 	"category":{
 		abstract:true,
-		examples:[]string{"military","urban","industrial","domestic","natural","man made","scientific","medical","law enforcement","professional","trade","aquatic","airborn","academic","educational","transport","mechanical","organic","professional"},
+		examples:[]string{
+			"military","urban","industrial","domestic","natural",
+			"man made","scientific","medical","law enforcement",
+			"professional","trade","aquatic","airborn","academic",
+			"educational","transport","mechanical","organic","professional"},
 	},
 	"fork lift truck":{
 		isa:[]string{"wheeled powered vehicle","industrial"},
@@ -68,7 +72,9 @@ var(g_srcLabels=map[string]SrcLabel{
 	"human":{
 		isa:[]string{"mammal"},
 		has:[]string{"head","arm","leg","torso","neck"},
-		states:[]string{"standing","walking","running","sitting","kneeling","reclining","sleeping"},
+		states:[]string{
+			"standing","walking","running","sitting",
+			"kneeling","reclining","sleeping"},
 	},
 	"soldier":{
 		isa:[]string{"person","military","professional"},
@@ -77,16 +83,27 @@ var(g_srcLabels=map[string]SrcLabel{
 	// 'european vs american vs asian cities'
 	"nationality":{
 		abstract:true,
-		examples:[]string{"north american","south american","european","russian","chinese","indian","arabian","middle eastern","african","australian","canadian","east european","balkan","japanese","asian","oriental"},
+		examples:[]string{
+			"north american","south american","european",
+			"russian","chinese","indian","arabian",
+			"middle eastern","african","australian","canadian",
+			"east european","balkan","japanese","asian","oriental"},
 	},
 	"weapon":{
 		isa:[]string{"military","tool"},
-		examples:[]string{"firearm","combat knife","sword","rocket launcher","flame thrower","grenade launcher","crossbow","longbow","compound bow","arrow","crossbow bolt","spear","lance","mace","ball and chain","trident","pike"},
+		examples:[]string{
+			"firearm","combat knife","sword","rocket launcher",
+			"flame thrower","grenade launcher","crossbow",
+			"longbow","compound bow","arrow","crossbow bolt",
+			"spear","lance","mace","ball and chain","trident","pike"},
 	},
 	"machine":{
 		isa:[]string{"man made"},
 		examples:[]string{
-			"vehicle","agricultural equipment","factory equipment","power tools","weapon","electrical equipment","electrical applicance","construction machinery","manufacturing tools",
+			"vehicle","agricultural equipment","factory equipment",
+			"power tools","weapon","electrical equipment",
+			"electrical applicance","construction machinery",
+			"manufacturing tools",
 		},
 	},
 	"electrical":{
@@ -94,13 +111,26 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"battery":{
 		isa:[]string{"electrical"},
-		examples:[]string{"AA battery","AAA battery","button cell","car battery","laptop battery","smartphone battery","rechargeable battery","disposable battery"},
+		examples:[]string{
+			"AA battery","AAA battery","button cell","car battery",
+			"laptop battery","smartphone battery","rechargeable battery",
+			"disposable battery"},
 	},
 	"button cell":{
 		examples:[]string{"LR44","CR2032","SR516","LR1154"},
 	},
 	"generic object":{
-		examples:[]string{"barrel","cylinder","box","tray","wall","roof","bin","bottle","tub","bag","clothing","textile","sports equipment","camping equipment","mechanism","desktop object","household object","agricultural object","urban object","military","ornament","painting","photograph","container","cleaning tool","barrier","razor wire","barbed wire","spikes","peice of art","pylon","post","beam","bracket","shelter","electrical","water related object","tube","control","pedal","key","masking tape","desktop object","trash","tent","workshop object","stock"},
+		examples:[]string{
+			"barrel","cylinder","box","tray","wall","roof","bin",
+			"bottle","tub","bag","clothing","textile","sports equipment",
+			"camping equipment","mechanism","desktop object",
+			"household object","agricultural object","urban object",
+			"military","ornament","painting","photograph","container",
+			"cleaning tool","barrier","razor wire","barbed wire","spikes",
+			"peice of art","pylon","post","beam","bracket","shelter",
+			"electrical","water related object","tube","control",
+			"pedal","key","masking tape","desktop object","trash",
+			"tent","workshop object","stock"},
 	},
 	"control device":{
 		isa:[]string{"generic object"},
@@ -132,7 +162,13 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"fence","railing","wall","low wall","level crossing barrier"},
 	},
 	"fence":{
-		examples:[]string{"wire fence","wooden fence","metal fence","picket fence","concrete fence","barbed wire fence","palisade","stockade fence","hurdle fence","wattle fence","hedgerow","live fencing","cactus fence","dry stone wall","welded wire mesh fence","brushwood fence","chain-link fencing","woven fence","temporary fencing"},
+		examples:[]string{
+			"wire fence","wooden fence","metal fence","picket fence",
+			"concrete fence","barbed wire fence","palisade",
+			"stockade fence","hurdle fence","wattle fence",
+			"hedgerow","live fencing","cactus fence","dry stone wall",
+			"welded wire mesh fence","brushwood fence","chain-link fencing",
+			"woven fence","temporary fencing"},
 	},
 	"cleaning tool":{
 		isa:[]string{"tool"},
@@ -153,10 +189,17 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"domestic appliance":{
 		translations:map[string]string{"british english":"white goods"},
-		examples:[]string{"washing machine","refridgerator","half height refridgerator","tall refridgerator","freezer","mini refridgerator","tumble drier","oven"},
+		examples:[]string{
+			"washing machine","refridgerator","half height refridgerator",
+			"tall refridgerator","freezer","mini refridgerator",
+			"tumble drier","oven"},
 	},
 	"sports equipment":{
-		examples:[]string{"skis","ski pole","skateboard","football","tennis ball","shuttlecock","tennis raquet","badminton racket","hocket stick","cricket bat","baseball bat","snooker cue","roller scate"},
+		examples:[]string{
+			"skis","ski pole","skateboard","football","tennis ball",
+			"shuttlecock","tennis raquet","badminton racket",
+			"hockey stick","cricket bat","baseball bat",
+			"snooker cue","roller scate"},
 	},
 	"personal transport":{
 		isa:[]string{"generic object"},
@@ -170,11 +213,18 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"hat","helmet","cap","headscarf"},
 	},
 	"helmet":{
-		examples:[]string{"bicycle helmet","motorcycle helmet","space helmet","diving helmet","crash helmet","medieval helmet","hard hat","rock climbing helmet","american football helmet","sports helmet","firefighters helmet","police helmet"},
+		examples:[]string{
+			"bicycle helmet","motorcycle helmet","space helmet",
+			"diving helmet","crash helmet","medieval helmet","hard hat",
+			"rock climbing helmet","american football helmet",
+			"sports helmet","firefighters helmet","police helmet"},
 	},
 	"clothing":{
 		isa:[]string{"personal item"},
-		examples:[]string{"jacket","trousers","skirt","jumper","dress","tracksuit","swimwear","hat","coat","winter coat","waterproof clothing","sportswear","footwear"},
+		examples:[]string{
+			"jacket","trousers","skirt","jumper","dress",
+			"tracksuit","swimwear","hat","coat","winter coat",
+			"waterproof clothing","sportswear","footwear"},
 	},
 	"eyewear":{
 		isa:[]string{"personal item"},
@@ -188,7 +238,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"excercise equipment":{
 		isa:[]string{"generic object"},
-		examples:[]string{"dumbell","barbell","kettlebell","excercise bike","treadmill","rowing machine","weighted vest","parallel bars","pullup bar"},
+		examples:[]string{
+			"dumbell","barbell","kettlebell","excercise bike",
+			"treadmill","rowing machine","weighted vest",
+			"parallel bars","pullup bar"},
 	},
 	"police box":{
 		isa:[]string{"urban object"},
@@ -198,16 +251,23 @@ var(g_srcLabels=map[string]SrcLabel{
 		has:[]string{"telephone"},
 	},
 	"mammal":{
-		examples:[]string{"giraffe","deer","bison","rodent","felinae","dog","wolf","hedgehog","anteater","primate","horse","donkey","oxen","sheep","cow"},
+		examples:[]string{
+			"giraffe","deer","bison","rodent","felinae","dog",
+			"wolf","hedgehog","anteater","primate","horse",
+			"donkey","oxen","sheep","cow"},
 	},
 	"primate":{
 		examples:[]string{"human","gorilla","chimpanzee","monkey"},
 	},
 	"felinae":{
-		examples:[]string{"domestic cat","wild cat","lion","tiger","white tiger","cheetah","panther","lynx"},
+		examples:[]string{
+			"domestic cat","wild cat","lion","tiger",
+			"white tiger","cheetah","panther","lynx"},
 	},
 	"hat":{
-		examples:[]string{"party hat","peaked cap","baseball cap","beanie","flat cap","mortar board","hard hat"},
+		examples:[]string{
+			"party hat","peaked cap","baseball cap","beanie",
+			"flat cap","mortar board","hard hat"},
 	},
 	"bag":{
 		examples:[]string{"rucksack","sports bag","handbag","courier bag"},
@@ -215,7 +275,13 @@ var(g_srcLabels=map[string]SrcLabel{
 	"fishing rod":{isa:[]string{"tool"}},
 	"camping equipment":{examples:[]string{"tent","mess tin","sleeping bag","tent pole","survival knife"}},
 	"component":{
-		examples:[]string{"room","building part","electronic component","vehicle component","bicycle component","mechanical component","car parts","aircraft component","weapon component","bodypart","lever","wings","wheel","trunk","handgrip","domestic fitting","corridor","hallway","metal component","handle","coin slot","keyhole","blade"},
+		examples:[]string{
+			"building part","electronic component","vehicle component",
+			"bicycle component","mechanical component","car parts",
+			"aircraft component","weapon component","bodypart",
+			"lever","wings","wheel","trunk","handgrip","domestic fitting",
+			"corridor","hallway","metal component","handle",
+			"coin slot","keyhole","blade"},
 	},
 	"electronic component":{
 		examples:[]string{"resistor","capacitor","LED","diode","breadboard","printed circuit board"},
@@ -228,7 +294,11 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"hydaulic ram","gearwheel","crankshaft","drive shaft","drive belt","conveyor belt","gearbox","turbine","spring","hinge"},
 	},
 	"metal component":{
-		examples:[]string{"ankerbolt","bolt","machine screw","nut (metal)","nail (metal)","socket screw","stainless steel screw","setscrew","tek screw","threaded rod","throughbolt","tube connector","tube insert","washer","woodscrew"},
+		examples:[]string{
+			"ankerbolt","bolt","machine screw","nut (metal)",
+			"nail (metal)","socket screw","stainless steel screw",
+			"setscrew","tek screw","threaded rod","throughbolt",
+			"tube connector","tube insert","washer","woodscrew"},
 	},
 	"room":{
 		examples:[]string{"board room","office","atrium","domestic room"},
@@ -244,7 +314,11 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"arch":{
 		isa:[]string{"building part"},
-		examples:[]string{"pointed arch","round arch","parabolic arch","lancet arch","trefoil arch","horseshoe arch","three centred arch","ogee arch","tudor arch","inflex arch","reverse ogee arch","trefoil arch","shouldered flat arch","equilateral pointed arch"},
+		examples:[]string{
+			"pointed arch","round arch","parabolic arch","lancet arch",
+			"trefoil arch","horseshoe arch","three centred arch",
+			"ogee arch","tudor arch","inflex arch","reverse ogee arch",
+			"trefoil arch","shouldered flat arch","equilateral pointed arch"},
 	},
 	"window":{
 		isa:[]string{"generic object"},
@@ -252,7 +326,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"window (building)":{
 		isa:[]string{"building part"},
-		examples:[]string{"stained glass window","glass window","lattice window","decorative window","casement window","awning window","skylight","pivot window","casement window"},
+		examples:[]string{
+			"stained glass window","glass window","lattice window",
+			"decorative window","casement window","awning window",
+			"skylight","pivot window","casement window"},
 	},
 	"coastal object":{
 		isa:[]string{"generic object"},
@@ -269,19 +346,41 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"wheel (bicycle)","wheel (tractor)","wheel (car)","castor wheel","wheel (mountain bike)","wheel (road bike)","mag wheel","wheel (truck)"},
 	},
 	"land vehicle component":{
-		examples:[]string{"bonnet","windscreen","wheel","license plate","headlight","tail light","steering wheel","joystick","caterpillar tracks","hydraulic ram","exhaust pipe","wing mirror","license plate","indicator","differential gear","suspension","brake disk","tire","wheel hub"},
+		examples:[]string{
+			"bonnet","windscreen","wheel","license plate",
+			"headlight","tail light","steering wheel","joystick",
+			"caterpillar tracks","hydraulic ram","exhaust pipe",
+			"wing mirror","license plate","indicator",
+			"differential gear","suspension","brake disk",
+			"tire","wheel hub"},
 	},
 	"weapon component":{
-		examples:[]string{"muzzle","gun barrel","pistol grip","receiver", "stock (firearms)","sights","charging handle","gas tube","foregrip","picitany rail","laser sight","box magazine","stripper clip","ammunition belt","cartridge (firearm)","bullet","shotgun shell"},
+		examples:[]string{
+			"muzzle","gun barrel","pistol grip","receiver",
+			"stock (firearms)","sights","charging handle",
+			"gas tube","foregrip","picitany rail","laser sight",
+			"box magazine","stripper clip","ammunition belt",
+			"cartridge (firearm)","bullet","shotgun shell"},
 	},
 	"stock (firearms)":{
-		examples:[]string{"solid stock","wooden stock","side folding stock","under folding stock","retractable sliding stock","skeletal stock","adjustable stock","M4 stock","bullpup stock","sniper stock"},
+		examples:[]string{
+			"solid stock","wooden stock","side folding stock",
+			"under folding stock","retractable sliding stock",
+			"skeletal stock","adjustable stock","M4 stock","bullpup stock",
+			"sniper stock"},
 	},
 	"aircraft component":{
-		examples:[]string{"wing","control column","tail boom","tail rotor","tail fin","cockpit","aileron","propeller","jet engine","cabin","landing gear","rotor blades"},
+		examples:[]string{
+			"wing","control column","tail boom","tail rotor",
+			"tail fin","cockpit","aileron","propeller","jet engine",
+			"cabin","landing gear","rotor blades"},
 	},
 	"bicycle component":{
-		examples:[]string{"derailleur","bicycle frame","handlebars (bicycle)","bicycle wheel","brake lever","gear lever","integrated shifter","saddle","mudguard","chain","chainset","casette (bicycle)","pedal (bicycle)","clipless pedal","disc brake (bicycle)"},
+		examples:[]string{
+			"derailleur","bicycle frame","handlebars (bicycle)",
+			"bicycle wheel","brake lever","gear lever","integrated shifter",
+			"saddle","mudguard","chain","chainset","casette (bicycle)",
+			"pedal (bicycle)","clipless pedal","disc brake (bicycle)"},
 	},
 	"handlebars (bicycle)":{
 		examples:[]string{"flat bars","drop handlebars","tribars","bullhorn bars"},	
@@ -297,7 +396,13 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"hand tool":{
 		has:[]string{"handle"},
-		examples:[]string{"hammer","spanner","screwdriver","alan key","wrench","chisel","saw","mallet","crowbar","hacksaw","wood saw","shovel","spade","axe","rake"},
+		examples:[]string{
+			"hammer","spanner","screwdriver","alan key","wrench",
+			"chisel","saw","mallet","crowbar","hacksaw",
+			"wood saw","shovel","spade","axe","rake"},
+	},
+	"saw":{
+		examples:[]string{"hand saw","wood saw","hacksaw","coping saw","japanese saw","two-man saw","wire saw"},
 	},
 	"workshop items":{
 		isa:[]string{"generic object"},
@@ -309,7 +414,10 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"gun","canon","rifle","pistol","revolver","handgun","machine gun","automatic weapon"},
 	},
 	"rifle":{
-		examples:[]string{"bolt action rifle","semi automatic rifle","automatic rifle","battle rifle","assault rifle","hunting rifle","carbine","sniper rifle"},
+		examples:[]string{
+			"bolt action rifle","semi automatic rifle",
+			"automatic rifle","battle rifle","assault rifle",
+			"hunting rifle","carbine","sniper rifle"},
 	},
 	"magazine fed firearm":{
 		isa:[]string{"firearm"},
@@ -429,7 +537,15 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"road marking":{
 		isa:[]string{"road layout feature"},
-		examples:[]string{"give way line","parking space","centreline","box junction","pedestrian crossing","striped reservation","lane divider","bus lane","cycle lane","stop line","chevron reservation","double white line","yellow lines (restricted parking)","double yellow lines (no parking)","disabled parking","mini roundabout","left turn lane","right turn lane","straight ahead lane","keep clear (road marking)","no entry (road marking)","slow (road marking)"},
+		examples:[]string{
+			"give way line","parking space","centreline","box junction",
+			"pedestrian crossing","striped reservation","lane divider",
+			"bus lane","cycle lane","stop line","chevron reservation",
+			"double white line","yellow lines (restricted parking)",
+			"double yellow lines (no parking)","disabled parking",
+			"mini roundabout","left turn lane","right turn lane",
+			"straight ahead lane","keep clear (road marking)",
+			"no entry (road marking)","slow (road marking)"},
 	},
 	"organism":{
 		isa:[]string{"natural"},
@@ -444,7 +560,12 @@ var(g_srcLabels=map[string]SrcLabel{
 	"edible mushroom":{
 		isa:[]string{"mushroom","edible"},
 		examples:[]string{
-			"Boletus edulis","Cantharellus cibarius","Cantharellus tubaeformis","Clitocybe nuda","Cortinarius caperatus","Craterellus cornucopioides","Grifola frondosa","Hericium erinaceus","Hydnum repandum","Lactarius deliciosus","Pleurotus ostreatus","Tricholoma matsutake","truffle","white mushroom",
+			"Boletus edulis","Cantharellus cibarius",
+			"Cantharellus tubaeformis","Clitocybe nuda",
+			"Cortinarius caperatus","Craterellus cornucopioides",
+			"Grifola frondosa","Hericium erinaceus","Hydnum repandum",
+			"Lactarius deliciosus","Pleurotus ostreatus",
+			"Tricholoma matsutake","truffle","white mushroom",
 		},
 	},
 	"poisonous mushroom":{
@@ -464,7 +585,12 @@ var(g_srcLabels=map[string]SrcLabel{
 	"car":{
 		isa:[]string{"vehicle"},
 		has:[]string{"wheel","bonnet","license plate","windscreen","headlight","tail light","exhaust pipe"},
-		examples:[]string{"hatchback","SUV","minivan","pickup truck","sedan","coupe","sportscar","convertible","open wheel racing car","gocart","racing car","touring car"},
+		examples:[]string{
+			"hatchback","SUV","minivan","pickup truck",
+			"sedan","coupe","sportscar","convertible",
+			"fastback",
+			"open wheel racing car","gocart",
+			"racing car","touring car"},
 		found_on:[]string{"road"},
 	},
 	"racing car":{
@@ -480,7 +606,10 @@ var(g_srcLabels=map[string]SrcLabel{
 
 	},
 	"construction machinery":{
-		examples:[]string{"bulldozer","excavator","mini excavator","road roller","wrecking ball","pile driver","digger","crane","tower crane","cement mixer"},
+		examples:[]string{
+			"bulldozer","excavator","mini excavator","road roller",
+			"wrecking ball","pile driver","digger","crane",
+			"tower crane","cement mixer"},
 	},
 	"bulldozer":{
 		has:[]string{"bucket (bulldozer)","caterpillar tracks"},
@@ -498,7 +627,10 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"light machine gun","heavy machine gun","GPMG"},
 	},
 	"light machine gun":{
-		examples:[]string{"RPK","bren light machine gun","browning automatic rifle","HK MG4","FN minimi","ultimax 100","stoner 63","L86 LSW","steyr AUG hbar","lewis gun"},
+		examples:[]string{
+			"RPK","bren light machine gun","browning automatic rifle",
+			"HK MG4","FN minimi","ultimax 100","stoner 63",
+			"L86 LSW","steyr AUG hbar","lewis gun"},
 	},
 	"heavy machine gun":{
 		examples:[]string{"M2 Browning machine gun","gatling gun","maxim gun","vickers machine gun"},
@@ -523,7 +655,9 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"dog","cat","horse","cow","sheep","lion","tiger","elephant"},
 	},
 	"door":{
-		examples:[]string{"revolving door","double door","wooden door","glass door","metal door","hatch"},
+		examples:[]string{
+			"revolving door","double door","wooden door","glass door",
+			"metal door","hatch"},
 	},
 	"farm animal":{
 		isa:[]string{"domesticated animal"},
@@ -531,7 +665,11 @@ var(g_srcLabels=map[string]SrcLabel{
 		found_on:[]string{"farm"},
 	},
 	"bodypart":{
-		examples:[]string{"ear","eye","eyebrow","cheek","neck","nose","mouth","chin","elbow","foot","hand","snout","tail","leg","arm","torso","body","shoulder","hips","knee","ankle","hoof","paw","tentacle","limb"},
+		examples:[]string{
+			"ear","eye","eyebrow","cheek","neck","nose","mouth","chin",
+			"elbow","foot","hand","snout","tail","leg","arm","torso",
+			"body","shoulder","hips","knee","ankle","hoof","paw",
+			"tentacle","limb"},
 	},
 	"head":{
 		isa:[]string{"bodypart"},
@@ -590,10 +728,16 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"vegtable":{
 		isa:[]string{"plant"},
-		examples:[]string{"leafy vegtable","brocoli","peas","cellery","brussel sprouts","cauliflower","mushroom","peppers","courgette","leak","beans","tomato","lentils","tomato","watercress","cucumber","squash (vegtable)","pumpkin","potato"},
+		examples:[]string{
+			"leafy vegtable","brocoli","peas","cellery","brussel sprouts",
+			"cauliflower","mushroom","peppers","courgette","leak","beans",
+			"tomato","lentils","tomato","watercress","cucumber",
+			"squash (vegtable)","pumpkin","potato","peas"},
 	},
 	"potato":{
-		examples:[]string{"roast potato","baked potato","boiled potato","new potatos","french fries","potato chips (crisps)","potato wedges"},
+		examples:[]string{
+			"roast potato","baked potato","boiled potato","new potatos",
+			"french fries","potato chips (crisps)","potato wedges"},
 	},
 	"leafy vegtable":{
 		examples:[]string{"spinach","cabbage","lettuice","kale"},
@@ -602,7 +746,13 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"carrots","garlic","onion","tuber","turnip","parsnip","radish"},
 	},
 	"beans":{
-		examples:[]string{"haricot beans","kidney beans","runner beans","baked beans","soybeans","beansprouts","mung beans"},
+		examples:[]string{
+			"haricot beans","kidney beans","runner beans","baked beans",
+			"soybeans","beansprouts","mung beans"},
+	},
+	"egg":{
+		isa:[]string{"food"},
+		examples:[]string{"raw egg","boiled egg","poached egg","scrambled egg","fried egg","omlette"},
 	},
 	"lentils":{
 		examples:[]string{"red lentils","green lentils","brown lentils","puy lentils","yellow lentils"},
@@ -621,10 +771,19 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"rolled oats"},
 	},
 	"furniture":{
-		examples:[]string{"table","chair","bed","cupboard","desk","park bench","public bench","bench","workbench","dinner table","round table","shelf","ottoman (furniture)","stool"},
+		examples:[]string{
+			"table","chair","bed","cupboard","desk",
+			"bench","workbench","dinner table","round table",
+			"shelf","ottoman (furniture)","stool"},
 	},
 	"chair":{
-		examples:[]string{"armchair","office chair","sofa","stackable chair","leather chair","wooden chair","plastic chair","metal chair","dining chair","bench","pew"},
+		examples:[]string{
+			"armchair","office chair","sofa","stackable chair",
+			"leather chair","wooden chair","plastic chair","metal chair",
+			"dining chair"},
+	},
+	"bench":{
+		examples:[]string{"park bench","pew","public bench","stone bench"},
 	},
 	"office chair":{
 		has:[]string{"castor wheel"},
@@ -651,7 +810,11 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"water":{
 		isa:[]string{"liquid"},
-		examples:[]string{"fresh water","drinking water","mineral water","lake","freshwater","river water","puddle","fountain spray","polluted water","salt water","sea","river","waterfall"},
+		examples:[]string{
+			"fresh water","drinking water","mineral water",
+			"lake","freshwater","river water","puddle",
+			"fountain spray","polluted water","salt water",
+			"sea","river","waterfall"},
 	},
 	"agricultural tool":{
 		isa:[]string{"tool","agricultural"},
@@ -677,7 +840,16 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"hay bail","farm animal","agricultural equipment"},
 	},
 	"urban object":{
-		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","traffic sign","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe","drain","metal cover","manhole cover","roadworks","bollard","traffic cone","statue","monument","bus shelter","bus stop","pedestrian crossing","fountain","water feature","gantry (road sign)","railway signal"},
+		examples:[]string{
+			"street bin","wheeliebin","skip","lamp post","utility pole",
+			"electricity pylon","telegraph pole","traffic lights",
+			"sign post","traffic sign","radio tower","satelite dish",
+			"bottle bank","plant pot","hanging basket","flower pot",
+			"metal cover","drain pipe","drain","metal cover",
+			"manhole cover","roadworks","bollard","traffic cone",
+			"statue","monument","bus shelter","bus stop",
+			"pedestrian crossing","fountain","water feature",
+			"gantry (road sign)","railway signal"},
 	},
 	"material":{
 		examples:[]string {"metal","plastic","vegetation","soil","stone","metal","plastic","textile","surface material"},
@@ -691,12 +863,18 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"urban area":{
 		isa:[]string{"area"},
-		examples:[]string{"retail area","residential area","parking area","construction site","building site","financial district","town centre","park","suburb","shopping centre"},
+		examples:[]string{
+			"retail area","residential area","parking area",
+			"construction site","building site","financial district",
+			"town centre","park","suburb","shopping centre"},
 
 	},
 	"area":{
 		abstract:true,
-		examples:[]string{"urban area","industrial area","rural area","wilderness","desert","coastal area","residential area","forecourt","quadrangle (architecture)","courtyard","cloister"},
+		examples:[]string{
+			"urban area","industrial area","rural area",
+			"wilderness","desert","coastal area","residential area",
+			"forecourt","quadrangle (architecture)","courtyard","cloister"},
 	},
 	"marque":{
 		abstract:true,
@@ -732,7 +910,10 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"cutting tool":{
 		isa:[]string{"tool"},
-		examples:[]string{"knife","sword","craft knife","scalpel","stanley knife","boxcutter","machete","meat cleaver","circular saw","chainsaw","axe","wood axe","scissors","soldering iron"},
+		examples:[]string{
+			"knife","sword","craft knife","scalpel","stanley knife",
+			"boxcutter","machete","meat cleaver","circular saw","chainsaw",
+			"axe","wood axe","scissors","soldering iron"},
 	},
 	"instrument":{
 		isa:[]string{"generic object"},
@@ -742,7 +923,11 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"oscilloscope","voltmeter"},
 	},
 	"musical instrument":{
-		examples:[]string{"piano","grand piano","string instrument","wind instrument","electronic musical instrument","keyboard (musical instrument)","sound synthesiser","drum (musical instrument)","tamborine","percussion instrument"},
+		examples:[]string{
+			"piano","grand piano","string instrument","wind instrument",
+			"electronic musical instrument","keyboard (musical instrument)",
+			"sound synthesiser","drum (musical instrument)","tamborine",
+			"percussion instrument"},
 	},
 	"audio equipment":{isa:[]string{"generic object"},
 		examples:[]string{"loudspeaker","microphone","audio tape","vinyl record","record player"},
@@ -787,7 +972,12 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"wind turbine","solar panel","solar concentrator","hydroelectric dam","geothermal power station","wave power device"},
 	},
 	"building":{
-		examples:[]string{"church","house","tower block","factory","warehouse","cathederal","terminal building","train station","skyscraper","tower","tall building","stadium","log cabin","castle","fortress","lighthouse","wooden barn","barn","grainstore","office block"},
+		examples:[]string{
+			"church","house","tower block","factory","warehouse",
+			"cathederal","terminal building","train station","skyscraper",
+			"tower","tall building","stadium","log cabin","castle",
+			"fortress","lighthouse","wooden barn","barn","grainstore",
+			"office block"},
 	},
 	"power tool":{
 		isa:[]string{"tool"},
@@ -899,7 +1089,11 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"consumer electronics":{
 		isa:[]string{"electrical applicance"},
-		examples:[]string{"TV","monitor","PC","laptop","tablet computer","smartphone","telephone","radio","game console","sound system","speakers","network switch","network hub","camera","camcorder","remote control handset","electric torch","3d printer"},
+		examples:[]string{
+			"TV","monitor","PC","laptop","tablet computer","smartphone",
+			"telephone","radio","game console","sound system","speakers",
+			"network switch","network hub","camera","camcorder",
+			"remote control handset","electric torch","3d printer"},
 	},
 	"mounted object":{
 		isa:[]string{"generic object"},
@@ -925,7 +1119,13 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"surface material":{
 		abstract:true,
-		examples:[]string{"fur","feathers","wood","plastic","stone","sand","dirt","mud","soil","clay","vegetation","tiled","paving stones","brick","concrete","plastic sheets","rubber","carpet","rug","perspex","chipboard","paint","ceramic","building material","smooth","rough","shiny","wet","carbon fibre","photovoltaic cell","expanded polystyrene"},
+		examples:[]string{
+			"fur","feathers","wood","plastic","stone","sand","dirt","mud",
+			"soil","clay","vegetation","tiled","paving stones","brick",
+			"concrete","plastic sheets","rubber","carpet","rug","perspex",
+			"chipboard","paint","ceramic","building material","smooth",
+			"rough","shiny","wet","carbon fibre","photovoltaic cell",
+			"expanded polystyrene"},
 	},
 	"mineral material":{
 		examples:[]string{"stone","rock","crystal","dolomite"},
@@ -940,7 +1140,10 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"roof tile","bathroom tile","floor tile","decorative tile",},
 	},
 	"stone":{
-		examples:[]string{"granite","limestone","sandstone","marble","ingeous rock","sedimentary rock","metamorphic rock","pumice","volcanic rock","stratified rock",},
+		examples:[]string{
+			"granite","limestone","sandstone","marble","ingeous rock",
+			"sedimentary rock","metamorphic rock","pumice","volcanic rock",
+			"stratified rock",},
 	},
 	"grass":{
 		isa:[]string{"vegetation","plant"},
@@ -968,7 +1171,11 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"shape":{
 		abstract:true,
-		examples:[]string{"spherical","round","curved","straight","uneven","flat","long","tall","thin","wedge","pyramid","torus","cuboid","prism","hexagonal extrusion","triangular extrusion","triangular","hexagonal","polygonal","polygonal extrusion"},
+		examples:[]string{
+			"spherical","round","curved","straight","uneven","flat",
+			"long","tall","thin","wedge","pyramid","torus","cuboid",
+			"prism","hexagonal extrusion","triangular extrusion",
+			"triangular","hexagonal","polygonal","polygonal extrusion"},
 	},
 })
 
