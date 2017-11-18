@@ -1412,8 +1412,6 @@ func (lg *LabelGraph) BuildSearchIndex(){
 	}
 	lg.labelsByChar = alphabeticMap;
 }
-	// Show results:-
-	// TODO formalise this as actual JSON
 
 func printContent(n string,xs *LabelPtrSet,postfix string){
 	if xs.len()==0 {return}
