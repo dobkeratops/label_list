@@ -257,7 +257,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"bonnet","windscreen","wheel","license plate","headlight","tail light","steering wheel","joystick","caterpillar tracks","hydraulic ram","exhaust pipe","wing mirror","license plate","indicator","differential gear","suspension","brake disk","tire","wheel hub"},
 	},
 	"weapon component":{
-		examples:[]string{"muzzle","gun barrel","pistol grip", "stock (firearms)","sights","charging handle","gas tube","foregrip","picitany rail","laser sight","box magazine","stripper clip","ammunition belt","cartridge (firearm)","bullet","shotgun shell"},
+		examples:[]string{"muzzle","gun barrel","pistol grip","receiver", "stock (firearms)","sights","charging handle","gas tube","foregrip","picitany rail","laser sight","box magazine","stripper clip","ammunition belt","cartridge (firearm)","bullet","shotgun shell"},
 	},
 	"stock (firearms)":{
 		examples:[]string{"solid stock","wooden stock","side folding stock","under folding stock","retractable sliding stock","skeletal stock","adjustable stock","M4 stock","bullpup stock","sniper stock"},
@@ -814,14 +814,14 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"computer perhipheral":{
 		isa:[]string{"consumer electronics"},		
-		examples:[]string{"computer mouse","computer keyboard","joystick","gamepad","webcam","microphone"},
+		examples:[]string{"computer mouse","computer keyboard","joystick","gamepad","bcam","microphone"},
 	},
 	"TV":{
 		examples:[]string{"flatscreen TV","LCD TV","plasma TV","LED TV","OLED TV","curved TV","CRT TV"},
 	},
 	"geographic feature":{
 		abstract:true,
-		examples:[]string{"mountain","hill","coastline","volcano","plain","valley","cave","forest"},
+		examples:[]string{"mountain","hill","coastline","volcano","plain","valley","cave","forest","island","flood plain","atol"},
 	},
 	"surface material":{
 		abstract:true,
@@ -1046,7 +1046,7 @@ func main() {
 	labelGraph := makeLabelGraph(g_srcLabels);
 	labelGraph.DumpJSON(false);
 	
-	labelGraph.DumpInfo();
+//	labelGraph.DumpInfo();
 
 }
 
