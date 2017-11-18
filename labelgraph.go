@@ -627,7 +627,13 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"rolled oats"},
 	},
 	"furniture":{
-		examples:[]string{"table","chair","bed","cupboard","desk","park bench","public bench","bench","workbench","dinner table","round table","shelf"},
+		examples:[]string{"table","chair","bed","cupboard","desk","park bench","public bench","bench","workbench","dinner table","round table","shelf","ottoman (furniture)","stool"},
+	},
+	"chair":{
+		examples:[]string{"armchair","office chair","sofa","stackable chair","leather chair","wooden chair","plastic chair","metal chair","dining chair"},
+	},
+	"office chair":{
+		has:[]string{"castor wheel"},
 	},
 	"enclosure":{
 		isa:[]string{"generic object"},
@@ -669,7 +675,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"kitchen","dining room","bedroom","living room","study","store room","garage"},
 		part_of:[]string{"house"},
 	},
-	"office building":{
+	"office block":{
 		isa:[]string{"building"},
 		has:[]string{"atrium","board room","office"},
 	},
@@ -787,7 +793,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"wind turbine","solar panel","solar concentrator","hydroelectric dam","geothermal power station","wave power device"},
 	},
 	"building":{
-		examples:[]string{"church","house","tower block","factory","warehouse","cathederal","terminal building","train station","skyscraper","tower","tall building","stadium","log cabin","castle","fortress","lighthouse","wooden barn","barn","grainstore"},
+		examples:[]string{"church","house","tower block","factory","warehouse","cathederal","terminal building","train station","skyscraper","tower","tall building","stadium","log cabin","castle","fortress","lighthouse","wooden barn","barn","grainstore","office block"},
 	},
 	"power tool":{
 		isa:[]string{"tool"},
@@ -845,11 +851,11 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"snake","quadrupedal lizard","quadrupedal amphibian"},
 	},
 	"quadrupedal lizard":{
-		isa:[]string{"lizard"},
+		isa:[]string{"lizard","quadruped"},
 		examples:[]string{"gecko","iguana","crocodile","alligator","dinosaur","chameleon","komodo dragon"},
 	},
 	"quadrupedal amphibian":{
-		isa:[]string{"amphibian"},
+		isa:[]string{"amphibian","quadruped"},
 		examples:[]string{"frog","salamander","toad"},
 	},
 	"tree":{
