@@ -628,7 +628,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"hay bail","farm animal","agricultural equipment"},
 	},
 	"urban object":{
-		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","traffic sign","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe","drain","metal cover","manhole cover","roadworks","bollard","traffic cone","statue","monument","bus shelter","bus stop","pedestrian crossing","fountain","water feature"},
+		examples:[]string{"street bin","wheeliebin","skip","lamp post","utility pole","electricity pylon","telegraph pole","traffic lights","sign post","traffic sign","radio tower","satelite dish","bottle bank","plant pot","hanging basket","flower pot","metal cover","drain pipe","drain","metal cover","manhole cover","roadworks","bollard","traffic cone","statue","monument","bus shelter","bus stop","pedestrian crossing","fountain","water feature","gantry (road sign)","railway signal"},
 	},
 	"material":{
 		examples:[]string {"metal","plastic","vegetation","soil","stone","metal","plastic","textile","surface material"},
@@ -652,9 +652,15 @@ var(g_srcLabels=map[string]SrcLabel{
 		abstract:true,
 		examples:[]string{"BMW","Ferrari","Maserati","Fiat","Ford","General Motors","Renault","Porsche","Mercedes"},
 	},
+	"parachute":{
+		isa:[]string{"generic object"},
+	},
+	"kite":{
+		isa:[]string{"flying object"},
+	},
 	"metal object":{
 		isa:[]string{"generic object"},
-		examples:[]string{"bell","anchor","hook","chain"},
+		examples:[]string{"bell","anchor","hook","chain","truss","gantry"},
 	},
 	"basket":{
 		isa:[]string{"container"},
@@ -677,13 +683,20 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"instrument":{
 		isa:[]string{"generic object"},
-		examples:[]string{"musical instrument","medical instrument","electrical instrument"},
+		examples:[]string{"musical instrument","medical instrument","electrical instrument","tuning fork"},
 	},
 	"electrical instrument":{
 		examples:[]string{"oscilloscope","voltmeter"},
 	},
 	"musical instrument":{
-		examples:[]string{"piano","grand piano","string instrument","wind instrument","electronic musical instrument","keyboard (musical instrument)","sound synthesiser"},
+		examples:[]string{"piano","grand piano","string instrument","wind instrument","electronic musical instrument","keyboard (musical instrument)","sound synthesiser","drum (musical instrument)","tamborine","percussion instrument"},
+	},
+	"audo equipment":{isa:[]string{"generic object"},
+		examples:[]string{"loudspeaker","microphone","audio tape","vinyl record","record player"},
+	},
+	"percussion instrument":{
+		isa:[]string{"musical instrument"},
+		examples:[]string{"cymbal","high hat (cymbal)","drum","drum stick"},
 	},
 	"wind instrument":{
 		examples:[]string{
@@ -732,7 +745,19 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"arthropod":{
 		isa:[]string{"animal"},
-		examples:[]string{"insect","arachnid","crustacean"},
+		examples:[]string{"insect","arachnid","crustacean","myriapoda"},
+	},
+	"myriapoda":{
+		examples:[]string{"centipede","millipede"},
+	},
+	"crustacean":{
+		examples:[]string{"shrimp","lobster","crab","woodlouse"},
+	},
+	"arachnid":{
+		examples:[]string{"house spider","black widow (spider)","tarantula","mite","scorpion"},
+	},
+	"insect":{
+		examples:[]string{"bee","wasp","ant","beetle","fly (insect)","ladybird","praying mantis","cockroach","antlion","butterfly","moth","catepillar","aphid","hoverfly"},
 	},
 	"invertebrate":{
 		isa:[]string{"animal"},
