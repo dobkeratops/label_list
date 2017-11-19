@@ -230,6 +230,11 @@ var(g_srcLabels=map[string]SrcLabel{
 		isa:[]string{"personal item"},
 		examples:[]string{"sunglasses","reading glasses","spectacles","monacle","safety glasses","goggles","swimming goggles"},
 	},
+	"glasswear":{
+		isa:[]string{"container"},
+		examples:[]string{"wineglass","beaker","jug","decanter","drink glass","pipette","flask","distillation tube"},
+	},
+
 	"footwear":{
 		examples:[]string{"shoes","flip flops","sandals","cycling shoes","clogs","slippers","trainers (footwear)"},
 	},
@@ -1238,49 +1243,52 @@ func (self *Label) IsExampleOf(l *Label) bool {
 	return false;
 }
 
-func (self *Label) GetAllPartsSub(ls *LabelPtrSet) {
-	for x,_ :=range self.has.items{
-		ls.Insert(x)
-	}
-	for x,_ :=range self.isa.items{
-		x.GetAllPartsSub(ls)
-	}
-}
-
 // recurse through all the ancestors of a label
 // to gather the full set of potential parts
-func (self *Label) GetAllParts() *LabelPtrSet {
+func (lbl *Label) GetAllParts() *LabelPtrSet {
 	parts:=CreateLabelPtrSet();
-	self.GetAllPartsSub(parts);
+
+	var(recurse func (*Label))
+	recurse=func (l *Label){
+		for x,_ :=range l.has.items{
+			parts.Insert(x)
+		}
+		for x,_ :=range l.isa.items{
+			recurse(x)
+		}		
+	}
+
+	recurse(lbl)
+
 	return parts;
 }
 
-func (lb *Label) GetAllParentsSub(parents *LabelPtrSet){
-	for x:=range lb.isa.items{
-		if (!x.abstract){
-			parents.Insert(x)
-		}
-		x.GetAllParentsSub(parents);
-	}
-}
 
-func (self *Label) GetAllParents() *LabelPtrSet {
+func (lbl *Label) GetAllParents() *LabelPtrSet {
 	parents:=CreateLabelPtrSet();
-	self.GetAllParentsSub(parents);
+	var(recurse func(l *Label))
+	recurse = func(l *Label){
+		for x:=range l.isa.items{
+			if !x.abstract{ parents.Insert(x)}
+			recurse(x)
+		}
+	}
+	recurse(lbl);
 	return parents;
 }
-func (lb *Label) GetAllExamplesSub(accum *LabelPtrSet){
-	for x:=range lb.examples.items{
-		if (!x.abstract){
-			accum.Insert(x)
-		}
-		x.GetAllExamplesSub(accum);
-	}
-}
 
-func (self *Label) GetAllExamples() *LabelPtrSet {
+func (lbl *Label) GetAllExamples() *LabelPtrSet {
 	examples:=CreateLabelPtrSet();
-	self.GetAllExamplesSub(examples);
+
+	var(recurse func(l *Label))
+	recurse = func(l *Label){
+		for x:=range l.examples.items{
+			if !x.abstract{ examples.Insert(x)}
+			recurse(x)
+		}
+	}
+	recurse(lbl);
+	
 	return examples;
 }
 
@@ -1413,9 +1421,10 @@ func (lg *LabelGraph) BuildSearchIndex(){
 	lg.labelsByChar = alphabeticMap;
 }
 
-func printContent(n string,xs *LabelPtrSet,postfix string){
+func (xs *LabelPtrSet) PrintJSONArray(indent int,n string,postfix string){
 	if xs.len()==0 {return}
-	fmt.Printf("\t\t\"%s\":[",n);
+	for i:=range(0,indent){fmt.Printf("\t")}
+	fmt.Printf("%s\":[",n);
 	i:=len(xs.items);
 	for x,_:=range xs.items{
 		fmt.Printf("\"%v\"",x.name);
@@ -1436,10 +1445,10 @@ func (self *LabelGraph) DumpJSON(verbose bool){
 	for name,label :=range self.all {
 		fmt.Printf("\t\"%v\":{\n ",name);
 
-		printContent("isa",&label.isa,",");
-		printContent("examples",&label.examples,",");
-		printContent("has",&label.has,",");
-		printContent("part_of",&label.part_of,"");
+		label.isa.PrintJSONArray("isa",",");
+		label.examples.PrintJSONArray("examples",",");
+		label.has.PrintJSONArray("has",",");
+		label.part_of.PrintJSONArray("part_of","");
 		fmt.Printf("\t},\n")
 	}
 	fmt.Printf("}\n ");
@@ -1450,10 +1459,10 @@ func (self *LabelGraph) DumpInfo(){
 	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels)\":%v \"leaf examples\":%v,\"orphans\":%v},\n",
 		len(self.all),
 		self.roots.len(), self.middle.len(),self.leaves.len(), self.orphans.len());
-	printContent("leaves",&self.leaves,",");
-	printContent("middle",&self.middle,",");
-	printContent("roots",&self.roots,",");
-	printContent("orphans",&self.orphans,"");
+	self.leaves.PrintJSONArray("leaves",",");
+	self.middle.PrintJSONArray("middle",",");
+	self.roots.PrintJSONArray("roots",",");
+	self.orphans.PrintJSONArray("orphans","");
 	
 	fmt.Printf("}\n ");
 }
@@ -1461,10 +1470,10 @@ func (self *LabelGraph) DumpInfo(){
 // test the functions for traversing the graph to
 // get full parts, parents etc.
 func (lg *LabelGraph) TestGraphIteration(){
-	printContent("dog parts",lg.Get("dog").GetAllParts(),",")
-	printContent("soldier parts",lg.Get("soldier").GetAllParts(),",")
-	printContent("lion isa",lg.Get("lion").GetAllParents(),",")
-	printContent("clothing examples",lg.Get("clothing").GetAllExamples(),",")
+	lg.Get("dog").GetAllParts().PrintJSONArray("dog parts",",")
+	lg.Get("soldier").GetAllParts().PrintJSONArray("soldier parts",",")
+	lg.Get("lion").GetAllParents().PrintJSONArray("lion isa",",")
+	lg.Get("clothing").GetAllExamples().PrintJSONArray("clothing examples",",")
 }
 
 func (lg *LabelGraph) GetLabelsContainingWordByChar(c rune) *LabelPtrSet {
@@ -1495,7 +1504,7 @@ func main() {
 	// compile labels into a map for access by string, with links
 	labelGraph := makeLabelGraph(g_srcLabels);
 	labelGraph.DumpJSON(false);
-//	labelGraph.TestGraphIteration();
+	labelGraph.TestGraphIteration();
 //	labelGraph.TestAlphabetic();
 	
 }
