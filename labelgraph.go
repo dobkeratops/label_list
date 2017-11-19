@@ -1421,6 +1421,7 @@ func (lg *LabelGraph) BuildSearchIndex(){
 	lg.labelsByChar = alphabeticMap;
 }
 
+// TODO - propper JSON output stuff.. probably existing libs?
 func (xs *LabelPtrSet) PrintJSONArray(indent int,n string,postfix string){
 	if xs.len()==0 {return}
 	for i:=range(0,indent){fmt.Printf("\t")}
@@ -1445,10 +1446,10 @@ func (self *LabelGraph) DumpJSON(verbose bool){
 	for name,label :=range self.all {
 		fmt.Printf("\t\"%v\":{\n ",name);
 
-		label.isa.PrintJSONArray("isa",",");
-		label.examples.PrintJSONArray("examples",",");
-		label.has.PrintJSONArray("has",",");
-		label.part_of.PrintJSONArray("part_of","");
+		label.isa.PrintJSONArray(2,"isa",",");
+		label.examples.PrintJSONArray(2,"examples",",");
+		label.has.PrintJSONArray(2,"has",",");
+		label.part_of.PrintJSONArray(2,"part_of","");
 		fmt.Printf("\t},\n")
 	}
 	fmt.Printf("}\n ");
@@ -1459,10 +1460,10 @@ func (self *LabelGraph) DumpInfo(){
 	fmt.Printf("\"labelList stats\":{\"total\":%v, \"roots(metalabels)\":%v, \"middle(labels)\":%v \"leaf examples\":%v,\"orphans\":%v},\n",
 		len(self.all),
 		self.roots.len(), self.middle.len(),self.leaves.len(), self.orphans.len());
-	self.leaves.PrintJSONArray("leaves",",");
-	self.middle.PrintJSONArray("middle",",");
-	self.roots.PrintJSONArray("roots",",");
-	self.orphans.PrintJSONArray("orphans","");
+	self.leaves.PrintJSONArray(2,"leaves",",");
+	self.middle.PrintJSONArray(2,"middle",",");
+	self.roots.PrintJSONArray(2,"roots",",");
+	self.orphans.PrintJSONArray(2,"orphans","");
 	
 	fmt.Printf("}\n ");
 }
@@ -1470,10 +1471,10 @@ func (self *LabelGraph) DumpInfo(){
 // test the functions for traversing the graph to
 // get full parts, parents etc.
 func (lg *LabelGraph) TestGraphIteration(){
-	lg.Get("dog").GetAllParts().PrintJSONArray("dog parts",",")
-	lg.Get("soldier").GetAllParts().PrintJSONArray("soldier parts",",")
-	lg.Get("lion").GetAllParents().PrintJSONArray("lion isa",",")
-	lg.Get("clothing").GetAllExamples().PrintJSONArray("clothing examples",",")
+	lg.Get("dog").GetAllParts().PrintJSONArray(1,"dog parts",",")
+	lg.Get("soldier").GetAllParts().PrintJSONArray(1,"soldier parts",",")
+	lg.Get("lion").GetAllParents().PrintJSONArray(1,"lion isa",",")
+	lg.Get("clothing").GetAllExamples().PrintJSONArray(1,"clothing examples",",")
 }
 
 func (lg *LabelGraph) GetLabelsContainingWordByChar(c rune) *LabelPtrSet {
@@ -1493,6 +1494,7 @@ func (lg *LabelGraph) TestAlphabetic(){
 		fmt.Print(x.name,"\n");
 	}
 }
+
 
 func (lg *LabelGraph) DumpWords(){
 	for word,_ :=range lg.labelsByWord {
