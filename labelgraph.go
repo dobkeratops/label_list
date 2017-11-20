@@ -261,7 +261,7 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{
 			"giraffe","deer","bison","rodent","felinae","dog",
 			"wolf","hedgehog","anteater","primate","horse","zebra","yak","wildebeast","antelope","rhinocerous","seal","rabbit","hare",
-			"donkey","oxen","sheep","cow","beaver","bear","marsupial","skunk"},
+			"donkey","oxen","sheep","cow","beaver","bear","marsupial","skunk","camel"},
 	},
 	"marsupial":{
 		examples:[]string{"kangaroo","koala bear","wombat"},
@@ -269,7 +269,9 @@ var(g_srcLabels=map[string]SrcLabel{
 	"bear":{
 		examples:[]string{"polar bear","sloth bear","spectacled bear","panda","brown bear","asian black bear","american black bear"},
 	},
-
+	"arctic animal":{isa:[]string{"animal"},
+		examples:[]string{"walrus","seel","penguin","polar bear"},
+	},
 	"primate":{
 		examples:[]string{"human","gorilla","chimpanzee","monkey"},
 	},
@@ -1038,14 +1040,14 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"arthropod","mollusc","worm"},
 	},
 	"mollusc":{
-		examples:[]string{"snail","slug","cephalopod"},
+		examples:[]string{"snail","slug","cephalopod","clam","cockles","mussel","oyster"},
 	},
 	"cephalopod":{
 		has:[]string{"tentacle"},
 		examples:[]string{"octopus","squid"},
 	},
 	"marine animal":{
-		examples:[]string{"fish","octopus","squid","jellyfish","shrimp","lobster","crab","starfish","sea urchin"},
+		examples:[]string{"fish","octopus","squid","jellyfish","shrimp","lobster","crab","starfish","sea urchin","sea anemone","barnicle"},
 	},
 
 	"aquatic object":{
