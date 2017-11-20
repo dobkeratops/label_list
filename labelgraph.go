@@ -685,7 +685,7 @@ var(g_srcLabels=map[string]SrcLabel{
 			"ear","eye","eyebrow","cheek","neck","nose","mouth","chin",
 			"elbow","foot","hand","snout","tail","leg","arm","torso",
 			"body","shoulder","hips","knee","ankle","hoof","paw",
-			"tentacle","limb"},
+			"tentacle","limb","tusk","antler","horn"},
 	},
 	"head":{
 		isa:[]string{"bodypart"},
@@ -701,7 +701,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},	
 	"elephant":{
 		isa:[]string{"quadruped"},
-		has:[]string{"trunk (elephant)"},
+		has:[]string{"trunk (elephant)","tusk"},
 	},
 	"plant":{
 		isa:[]string{"organism"},
