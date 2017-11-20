@@ -376,7 +376,7 @@ var(g_srcLabels=map[string]SrcLabel{
 			"stock (firearms)","sights","charging handle",
 			"gas tube","foregrip","picitany rail","laser sight",
 			"box magazine","stripper clip","ammunition belt",
-			"cartridge (firearm)","bullet","shotgun shell"},
+			"cartridge (firearm)","bullet","shotgun shell","firing pin","bolt carrier"},
 	},
 	"stock (firearms)":{
 		examples:[]string{
