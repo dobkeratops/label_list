@@ -12,6 +12,7 @@ type SrcLabel struct {
 	found_in	[]string;
 	states		[]string;
 	abstract	bool;
+	ambiguous	bool;	// words which carry very differe
 	found_on	[]string;
 	translations	map[string]string;
 }
@@ -28,6 +29,7 @@ type Label struct {
 	isa	LabelPtrSet;
 	initialized	bool;
 	abstract	bool;
+	ambiguous	bool;	// words which carry very differe
 	examples	LabelPtrSet;
 	has	LabelPtrSet;
 	part_of	LabelPtrSet;
@@ -258,9 +260,16 @@ var(g_srcLabels=map[string]SrcLabel{
 	"mammal":{
 		examples:[]string{
 			"giraffe","deer","bison","rodent","felinae","dog",
-			"wolf","hedgehog","anteater","primate","horse",
-			"donkey","oxen","sheep","cow"},
+			"wolf","hedgehog","anteater","primate","horse","zebra","yak","wildebeast","antelope","rhinocerous","seal","rabbit","hare",
+			"donkey","oxen","sheep","cow","beaver","bear","marsupial","skunk"},
 	},
+	"marsupial":{
+		examples:[]string{"kangaroo","koala bear","wombat"},
+	},
+	"bear":{
+		examples:[]string{"polar bear","sloth bear","spectacled bear","panda","brown bear","asian black bear","american black bear"},
+	},
+
 	"primate":{
 		examples:[]string{"human","gorilla","chimpanzee","monkey"},
 	},
@@ -694,7 +703,7 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"plant":{
 		isa:[]string{"organism"},
-		examples:[]string{"tree","bush","flower","hedge","shrub","vines","weed","carnivorous plant","spider plant","indoor plant"},
+		examples:[]string{"tree","bush","flower","hedge","shrub","vines","weed","carnivorous plant","spider plant","indoor plant","seed"},
 	},
 	"carnivorous plant":{
 		examples:[]string{"pitcher plant","venus fly trap"},
@@ -710,9 +719,9 @@ var(g_srcLabels=map[string]SrcLabel{
 		states:[]string{"raw","sliced","cooked","diced","peeled"},
 	},
 	"food":{
-		examples:[]string{"vegtable","fruit","nuts","meat","cereal","egg","salad","soup","sandwich","junk food","confectionary","hot dog","desert","pie","pastry","garnish","fast food","snack","meal","berry","beans","salad","stew","burger bun"},
+		examples:[]string{"vegtable","fruit","nut","meat","cereal","egg","salad","soup","sandwich","junk food","confectionary","hot dog","desert","pie","pastry","garnish","fast food","snack","meal","berry","beans","salad","stew","burger bun"},
 	},
-	"nuts":{
+	"nut":{
 		examples:[]string{"wallnuts","hazelnuts","pecans","almonds","peanuts","cashew nuts","pistachio nuts"},
 	},
 	"desert":{
@@ -905,8 +914,19 @@ var(g_srcLabels=map[string]SrcLabel{
 	},
 	"container":{
 		isa:[]string{"generic object"},
-		examples:[]string{"drum","barrel","cylinder","box","tray","basket","bag","shipping container","crate","carton"},
+		examples:[]string{"cylinder","box","tray","basket","bag","shipping container","crate","carton","liquid container","gas cylinder"},
 	},
+	"liquid container":{
+		examples:[]string{
+			"barrel",
+			"tank (container)",
+			"thermos flask",
+			"teapot",
+			"milk carton",
+			"jerrycan",
+		},
+	},
+
 	"crate":{
 		examples:[]string{"wooden crate","shipping crate","metal crate","bottle crate","milk crate","dog crate"},
 	},
@@ -1027,6 +1047,15 @@ var(g_srcLabels=map[string]SrcLabel{
 	"marine animal":{
 		examples:[]string{"fish","octopus","squid","jellyfish","shrimp","lobster","crab","starfish","sea urchin"},
 	},
+
+	"aquatic object":{
+		examples:[]string{"coral reef","hydrothermal vent","sunken ship","kelp","seaweed","plankton","fish","aquatic vehicle"},
+	},
+	"aquatic plant":{
+		isa:[]string{"plant"},
+		examples:[]string{"seaweed","kelp","reeds","lilly pad","pondscum","plankton"},
+	},
+
 	"fish":{
 		has:[]string{"fin"},
 		examples:[]string{"cod","tuna","mackerel","salmon","pirhana","goldfish","red lionfish","carp","swordfish","flying fish"},
@@ -1036,11 +1065,10 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"mammal","fish","reptile","amphibian"},
 	},
 	"lizard":{
-		isa:[]string{"vertebrate"},
-		examples:[]string{"snake","quadrupedal lizard","quadrupedal amphibian"},
+		isa:[]string{"reptile"},
 	},
-	"quadrupedal lizard":{
-		isa:[]string{"lizard","quadruped"},
+	"quadrupedal reptile":{
+		isa:[]string{"reptile","quadruped"},
 		examples:[]string{"gecko","iguana","crocodile","alligator","dinosaur","chameleon","komodo dragon"},
 	},
 	"quadrupedal amphibian":{
@@ -1052,6 +1080,8 @@ var(g_srcLabels=map[string]SrcLabel{
 		examples:[]string{"palm tree","fern","oak tree","conifer","evergreen","small tree","large tree","tree stump"},
 		has:[]string{"trunk (tree)","foilage"},
 	},
+	"bracken":{isa:[]string{"plant"}},
+	"fern":{isa:[]string{"plant"}},
 	"bush":{
 		isa:[]string{"plant"},
 	},	
@@ -1424,7 +1454,7 @@ func (lg *LabelGraph) BuildSearchIndex(){
 // TODO - propper JSON output stuff.. probably existing libs?
 func (xs *LabelPtrSet) PrintJSONArray(indent int,n string,postfix string){
 	if xs.len()==0 {return}
-	for i:=range(0,indent){fmt.Printf("\t")}
+	for i:=0; i<indent; i++ {fmt.Printf("\t")}
 	fmt.Printf("%s\":[",n);
 	i:=len(xs.items);
 	for x,_:=range xs.items{
