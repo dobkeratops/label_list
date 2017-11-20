@@ -314,7 +314,7 @@ var(g_srcLabels=map[string]SrcLabel{
 			"ankerbolt","bolt","machine screw","nut (metal)",
 			"nail (metal)","socket screw","stainless steel screw",
 			"setscrew","tek screw","threaded rod","throughbolt",
-			"tube connector","tube insert","washer","woodscrew"},
+			"tube connector","tube insert","washer","woodscrew","heat sink"},
 	},
 	"room":{
 		examples:[]string{"board room","office","atrium","domestic room"},
@@ -376,7 +376,7 @@ var(g_srcLabels=map[string]SrcLabel{
 			"stock (firearms)","sights","charging handle",
 			"gas tube","foregrip","picitany rail","laser sight",
 			"box magazine","stripper clip","ammunition belt",
-			"cartridge (firearm)","bullet","shotgun shell","firing pin","bolt carrier"},
+			"cartridge (firearm)","bullet","shotgun shell","firing pin","bolt carrier","ejection port"},
 	},
 	"stock (firearms)":{
 		examples:[]string{
